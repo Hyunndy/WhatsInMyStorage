@@ -13,7 +13,7 @@ import UIKit
     - application level의 life-cycle을 관리하는 역할
 
  * App의 entry Point
-    - Swift 프로젝트에는 왜 C++ 프로젝트 처럼 Maing 함수가 없는걸까?
+    - Swift 프로젝트에는 왜 C++ 프로젝트 처럼 Main 함수가 없는걸까?
         -> UIKit 프레임워크에 숨어있기 떄문이다.
  
     - Swift 컴파일러는 @main 어노테이션을 통해 AppDelegate에서 전역범위에 있는 코드를 자동으로 인식하게 하고 실행시켜 Entry Point가 되게 한다.

@@ -1,0 +1,29 @@
+
+
+신기술과 여태까지했던 개발과는 다른 방식으로 개발하자.
+
+
+데이터 타입 관련된 소스 -> 구조체
+프로토콜, 익스텐션, 제네릭 사용을 많이하자.
+
+
+FlexLayout
+PinLayout
+
+
+22.11.02 (수)
+탭 바 컨트롤러 설정할 때 TabBarItem을 외부 VC에서 정의하는게 bad하다고 느껴져서 실제 들어가는 rootViewController에서 tabBarItem 정보를 갖고있게 하기 위해
+UITabBarControllerDelegate를 만들었다.
+
+TabBarController에서 Generic으로 [VC] 배열을 넘기면 세팅되게끔 하려고했는데,
+
+func setTabBarItem<T>(viewController: [T]) where T: UIViewController & UITabBarItemControllerDelegate {}
+
+이렇게 함수를 선언 후 호출할 때 [VC, VC] 가 먹지 않았다.
+Array의 Element에는 Protocol이 들어갈 수 없는 것 같다. [VC]로 하면 잘 동작했는데, 인자가 여러개가 되는 순간 컴파일에러가 떴다.
+아마 Array도 Generic으로 되어있어서? 타입 유추를 못하는 것 같다.
+
+그래서 결국 Array<UIViewController & UITabBarItemControllerDelegate>로 [VC]를 만들어서 구현했다. Generic 결국 사용 안함..ㅋㅋ
+
+개인적으로 지금 TabBarController 세팅 코드가 완전 맘에 드는건 아니지만, 그냥 UI 그리는게 아니고 어떻게든 프로토콜을 이용해서 구현했다는 점을 높이 사자..
+

@@ -12,6 +12,11 @@
 		02B9F79F290ED416005973AE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B9F79E290ED416005973AE /* ViewController.swift */; };
 		02B9F7A4290ED417005973AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02B9F7A3290ED417005973AE /* Assets.xcassets */; };
 		02B9F7A7290ED417005973AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02B9F7A5290ED417005973AE /* LaunchScreen.storyboard */; };
+		02C53F1B29115B3900974031 /* MyStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F1A29115B3900974031 /* MyStorageViewController.swift */; };
+		02C53F1E29115D6C00974031 /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F1D29115D6C00974031 /* ProtocolManager.swift */; };
+		02C53F2029115DC900974031 /* Deleveloper_ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = 02C53F1F29115DC900974031 /* Deleveloper_ReadMe */; };
+		02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F2129115F8F00974031 /* UserSettingViewController.swift */; };
+		02C53F252911613400974031 /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F242911613400974031 /* PropertyWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +27,11 @@
 		02B9F7A3290ED417005973AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02B9F7A6290ED417005973AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		02B9F7A8290ED417005973AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		02C53F1A29115B3900974031 /* MyStorageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageViewController.swift; sourceTree = "<group>"; };
+		02C53F1D29115D6C00974031 /* ProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolManager.swift; sourceTree = "<group>"; };
+		02C53F1F29115DC900974031 /* Deleveloper_ReadMe */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deleveloper_ReadMe; sourceTree = "<group>"; };
+		02C53F2129115F8F00974031 /* UserSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewController.swift; sourceTree = "<group>"; };
+		02C53F242911613400974031 /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +48,7 @@
 		02B9F78E290ED416005973AE = {
 			isa = PBXGroup;
 			children = (
+				02C53F1F29115DC900974031 /* Deleveloper_ReadMe */,
 				02B9F799290ED416005973AE /* WhatsInMyStorage */,
 				02B9F798290ED416005973AE /* Products */,
 			);
@@ -54,6 +65,10 @@
 		02B9F799290ED416005973AE /* WhatsInMyStorage */ = {
 			isa = PBXGroup;
 			children = (
+				02C53F232911612900974031 /* PropertyWrapper */,
+				02C53F1C29115C7C00974031 /* Protocol */,
+				02C53F1929115B2200974031 /* Setting */,
+				02C53F1829115B1900974031 /* Storage */,
 				02B9F79A290ED416005973AE /* AppDelegate.swift */,
 				02B9F79C290ED416005973AE /* SceneDelegate.swift */,
 				02B9F79E290ED416005973AE /* ViewController.swift */,
@@ -62,6 +77,38 @@
 				02B9F7A8290ED417005973AE /* Info.plist */,
 			);
 			path = WhatsInMyStorage;
+			sourceTree = "<group>";
+		};
+		02C53F1829115B1900974031 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				02C53F1A29115B3900974031 /* MyStorageViewController.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		02C53F1929115B2200974031 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				02C53F2129115F8F00974031 /* UserSettingViewController.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		02C53F1C29115C7C00974031 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				02C53F1D29115D6C00974031 /* ProtocolManager.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		02C53F232911612900974031 /* PropertyWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				02C53F242911613400974031 /* PropertyWrapper.swift */,
+			);
+			path = PropertyWrapper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,6 +169,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02C53F2029115DC900974031 /* Deleveloper_ReadMe in Resources */,
 				02B9F7A7290ED417005973AE /* LaunchScreen.storyboard in Resources */,
 				02B9F7A4290ED417005973AE /* Assets.xcassets in Resources */,
 			);
@@ -135,7 +183,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				02B9F79F290ED416005973AE /* ViewController.swift in Sources */,
+				02C53F252911613400974031 /* PropertyWrapper.swift in Sources */,
 				02B9F79B290ED416005973AE /* AppDelegate.swift in Sources */,
+				02C53F1B29115B3900974031 /* MyStorageViewController.swift in Sources */,
+				02C53F1E29115D6C00974031 /* ProtocolManager.swift in Sources */,
+				02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */,
 				02B9F79D290ED416005973AE /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
