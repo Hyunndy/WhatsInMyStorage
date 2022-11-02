@@ -16,10 +16,15 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func loadView() {
+        super.loadView()
         
         self.view.backgroundColor = .white
+        self.tabBar.backgroundColor = UIColor.lightGray
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         self.setRootViewControllers()
     }

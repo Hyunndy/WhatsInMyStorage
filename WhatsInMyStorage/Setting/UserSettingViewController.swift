@@ -9,6 +9,18 @@ import UIKit
 
 class UserSettingViewController: UIViewController,  UIViewControllerDelegate {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setNavigationBar()
+        self.setUI()
+    }
+    
+    func setNavigationBar() {
+        self.title = "설정"
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
+    }
+    
     func setUI() {
         //
     }
@@ -21,7 +33,9 @@ class UserSettingViewController: UIViewController,  UIViewControllerDelegate {
 extension UserSettingViewController: UITabBarItemControllerDelegate {
     internal var customTabBarItem: UITabBarItem {
         get {
-            return UITabBarItem(title: "설정", image: nil, tag: 1)
+            let tabBarImage = UIImage(named: "heart_filled_24")
+            let tabBar = UITabBarItem(title: "설정", image: tabBarImage, tag: 1)
+            return tabBar
         }
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 
 // @유현지 UI 세팅 프로토콜
 protocol UIViewControllerDelegate {
+    func setNavigationBar()
     func setUI()
     func setRx()
 }

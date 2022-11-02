@@ -17,6 +17,11 @@
 		02C53F2029115DC900974031 /* Deleveloper_ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = 02C53F1F29115DC900974031 /* Deleveloper_ReadMe */; };
 		02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F2129115F8F00974031 /* UserSettingViewController.swift */; };
 		02C53F252911613400974031 /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F242911613400974031 /* PropertyWrapper.swift */; };
+		02C53F282912D54300974031 /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 02C53F272912D54300974031 /* PinLayout */; };
+		02C53F2B2912D63E00974031 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 02C53F2A2912D63E00974031 /* Then */; };
+		02C53F2E2912D9B100974031 /* FlexLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 02C53F2D2912D9B100974031 /* FlexLayout */; };
+		02C53F302912D9B100974031 /* FlexLayoutYoga in Frameworks */ = {isa = PBXBuildFile; productRef = 02C53F2F2912D9B100974031 /* FlexLayoutYoga */; };
+		02C53F322912D9B100974031 /* FlexLayoutYogaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 02C53F312912D9B100974031 /* FlexLayoutYogaKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02C53F2E2912D9B100974031 /* FlexLayout in Frameworks */,
+				02C53F322912D9B100974031 /* FlexLayoutYogaKit in Frameworks */,
+				02C53F282912D54300974031 /* PinLayout in Frameworks */,
+				02C53F2B2912D63E00974031 /* Then in Frameworks */,
+				02C53F302912D9B100974031 /* FlexLayoutYoga in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +137,13 @@
 			dependencies = (
 			);
 			name = WhatsInMyStorage;
+			packageProductDependencies = (
+				02C53F272912D54300974031 /* PinLayout */,
+				02C53F2A2912D63E00974031 /* Then */,
+				02C53F2D2912D9B100974031 /* FlexLayout */,
+				02C53F2F2912D9B100974031 /* FlexLayoutYoga */,
+				02C53F312912D9B100974031 /* FlexLayoutYogaKit */,
+			);
 			productName = WhatsInMyStorage;
 			productReference = 02B9F797290ED416005973AE /* WhatsInMyStorage.app */;
 			productType = "com.apple.product-type.application";
@@ -155,6 +172,11 @@
 				Base,
 			);
 			mainGroup = 02B9F78E290ED416005973AE;
+			packageReferences = (
+				02C53F262912D54300974031 /* XCRemoteSwiftPackageReference "PinLayout" */,
+				02C53F292912D63D00974031 /* XCRemoteSwiftPackageReference "Then" */,
+				02C53F2C2912D9B100974031 /* XCRemoteSwiftPackageReference "FlexLayout" */,
+			);
 			productRefGroup = 02B9F798290ED416005973AE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -402,6 +424,61 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		02C53F262912D54300974031 /* XCRemoteSwiftPackageReference "PinLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/layoutBox/PinLayout";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		02C53F292912D63D00974031 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		02C53F2C2912D9B100974031 /* XCRemoteSwiftPackageReference "FlexLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/layoutBox/FlexLayout.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		02C53F272912D54300974031 /* PinLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C53F262912D54300974031 /* XCRemoteSwiftPackageReference "PinLayout" */;
+			productName = PinLayout;
+		};
+		02C53F2A2912D63E00974031 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C53F292912D63D00974031 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		02C53F2D2912D9B100974031 /* FlexLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C53F2C2912D9B100974031 /* XCRemoteSwiftPackageReference "FlexLayout" */;
+			productName = FlexLayout;
+		};
+		02C53F2F2912D9B100974031 /* FlexLayoutYoga */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C53F2C2912D9B100974031 /* XCRemoteSwiftPackageReference "FlexLayout" */;
+			productName = FlexLayoutYoga;
+		};
+		02C53F312912D9B100974031 /* FlexLayoutYogaKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C53F2C2912D9B100974031 /* XCRemoteSwiftPackageReference "FlexLayout" */;
+			productName = FlexLayoutYogaKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 02B9F78F290ED416005973AE /* Project object */;
 }
