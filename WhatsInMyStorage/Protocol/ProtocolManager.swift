@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import ReactorKit
 
 // @유현지 UI 세팅 프로토콜
 protocol UIViewControllerDelegate {
@@ -25,6 +26,7 @@ extension UITabBarItemControllerDelegate {
     func convertToRootVC() -> UINavigationController {
         let controller = UINavigationController(rootViewController: self)
         controller.tabBarItem = self.customTabBarItem
+        
         
         return controller
     }
