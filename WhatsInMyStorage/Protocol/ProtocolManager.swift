@@ -9,11 +9,17 @@ import Foundation
 import UIKit
 import ReactorKit
 
-// @유현지 UI 세팅 프로토콜
+// @유현지 pinLayout UI 세팅 프로토콜
 protocol UIViewControllerDelegate {
+    associatedtype mainViewType
+    var mainView: mainViewType { get }
+    
     func setNavigationBar()
     func setUI()
+    func setLayout()
     func setRx()
+    
+    
 }
 
 // @유현지 탭바 컨트롤러 프로토콜

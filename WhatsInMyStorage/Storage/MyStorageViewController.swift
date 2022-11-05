@@ -19,6 +19,13 @@ import Then
 
 class MyStorageViewController: UIViewController, UIViewControllerDelegate {
     
+    typealias mainViewType = MyStorageRootContainerView
+    var mainView: MyStorageRootContainerView {
+        get {
+            return self.view as! MyStorageRootContainerView
+        }
+    }
+    
     // 1) flexBox 가장 바깥쪽 Container를 만들고 addSubview 한다.
     let rootFlexContainer = UIView()
     
@@ -33,6 +40,10 @@ class MyStorageViewController: UIViewController, UIViewControllerDelegate {
         
         self.setNavigationBar()
         self.setUI()
+    }
+    
+    func setLayout() {
+        
     }
     
     func setNavigationBar() {
