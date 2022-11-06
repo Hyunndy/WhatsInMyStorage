@@ -18,8 +18,10 @@ protocol UIViewControllerDelegate {
     func setUI()
     func setLayout()
     func setRx()
-    
-    
+}
+
+extension UIViewControllerDelegate {
+    func setNavigationBar() { }
 }
 
 // @유현지 탭바 컨트롤러 프로토콜
@@ -31,6 +33,7 @@ protocol UITabBarItemControllerDelegate: UIViewController {
 extension UITabBarItemControllerDelegate {
     func convertToRootVC() -> UINavigationController {
         let controller = UINavigationController(rootViewController: self)
+//        controller.isNavigationBarHidden = true
         controller.tabBarItem = self.customTabBarItem
         
         

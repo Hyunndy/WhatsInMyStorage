@@ -31,10 +31,10 @@ final class MainTabBarController: UITabBarController {
     
     private func setRootViewControllers() {
         
-        let myStoreageViewController = MyStorageViewController()
-        myStoreageViewController.reactor = MyStorageReactor()
+        let homeRootViewController = HomeRootViewController()
+        homeRootViewController.reactor = HomeReactor()
         
-        let originalVCArray: Array<UIViewController & UITabBarItemControllerDelegate> = [myStoreageViewController, UserSettingViewController()]
+        let originalVCArray: Array<UIViewController & UITabBarItemControllerDelegate> = [homeRootViewController, UserSettingViewController()]
         let rootVCArray = originalVCArray.map( { $0.convertToRootVC() })
         self.setViewControllers(rootVCArray, animated: true)
     }

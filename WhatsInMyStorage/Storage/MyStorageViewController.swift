@@ -15,8 +15,6 @@ import RxCocoa
 import Then
 
 // (-) 버튼 (라벨) (+) 버튼
-
-
 class MyStorageViewController: UIViewController, UIViewControllerDelegate {
     
     typealias mainViewType = MyStorageRootContainerView
@@ -123,15 +121,6 @@ class MyStorageViewController: UIViewController, UIViewControllerDelegate {
     
     func setRx() {
         //
-    }
-}
-
-extension MyStorageViewController: UITabBarItemControllerDelegate {
-    internal var customTabBarItem: UITabBarItem {
-        get {
-            let tabBarImage = UIImage(named: "heart_filled_24")
-            return UITabBarItem(title: "재고 관리", image: tabBarImage, tag: 0)
-        }
     }
 }
 
