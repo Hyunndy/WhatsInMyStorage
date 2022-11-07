@@ -15,6 +15,8 @@
 		0267DBF62917F2C600F257AD /* HomeRootContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0267DBF52917F2C600F257AD /* HomeRootContainerView.swift */; };
 		0267DBF82917F42200F257AD /* HomeContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0267DBF72917F42200F257AD /* HomeContentView.swift */; };
 		0267DBFE2918011400F257AD /* HomeReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0267DBFD2918011400F257AD /* HomeReactor.swift */; };
+		0267DC0129196D8900F257AD /* TestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0267DC0029196D8900F257AD /* TestCell.swift */; };
+		0267DC0329196DC000F257AD /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0267DC0229196DC000F257AD /* TestData.swift */; };
 		02A38A3C291413E800B02951 /* MyStorageReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A38A3B291413E800B02951 /* MyStorageReactor.swift */; };
 		02B9F79B290ED416005973AE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B9F79A290ED416005973AE /* AppDelegate.swift */; };
 		02B9F79D290ED416005973AE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B9F79C290ED416005973AE /* SceneDelegate.swift */; };
@@ -38,6 +40,8 @@
 		0267DBF52917F2C600F257AD /* HomeRootContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRootContainerView.swift; sourceTree = "<group>"; };
 		0267DBF72917F42200F257AD /* HomeContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContentView.swift; sourceTree = "<group>"; };
 		0267DBFD2918011400F257AD /* HomeReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeReactor.swift; sourceTree = "<group>"; };
+		0267DC0029196D8900F257AD /* TestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCell.swift; sourceTree = "<group>"; };
+		0267DC0229196DC000F257AD /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		02A38A3B291413E800B02951 /* MyStorageReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageReactor.swift; sourceTree = "<group>"; };
 		02B9F797290ED416005973AE /* WhatsInMyStorage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsInMyStorage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02B9F79A290ED416005973AE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +92,7 @@
 		0267DBF12917F26A00F257AD /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				0267DBFF29196D7C00F257AD /* CollectionView */,
 				0267DBFC2918010900F257AD /* Reactor */,
 				0267DBF42917F2B400F257AD /* View */,
 				0267DBF22917F27800F257AD /* HomeViewController.swift */,
@@ -110,6 +115,15 @@
 				0267DBFD2918011400F257AD /* HomeReactor.swift */,
 			);
 			path = Reactor;
+			sourceTree = "<group>";
+		};
+		0267DBFF29196D7C00F257AD /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				0267DC0029196D8900F257AD /* TestCell.swift */,
+				0267DC0229196DC000F257AD /* TestData.swift */,
+			);
+			path = CollectionView;
 			sourceTree = "<group>";
 		};
 		02A38A3A291413DC00B02951 /* Reactor */ = {
@@ -341,6 +355,7 @@
 				02C53F1B29115B3900974031 /* MyStorageViewController.swift in Sources */,
 				02A38A3C291413E800B02951 /* MyStorageReactor.swift in Sources */,
 				02C53F1E29115D6C00974031 /* ProtocolManager.swift in Sources */,
+				0267DC0329196DC000F257AD /* TestData.swift in Sources */,
 				0267DBFE2918011400F257AD /* HomeReactor.swift in Sources */,
 				0267DBE529161CB300F257AD /* AutoSizingContainerView.swift in Sources */,
 				0267DBE7291680A800F257AD /* AutoSizingView.swift in Sources */,
@@ -348,6 +363,7 @@
 				0267DBF62917F2C600F257AD /* HomeRootContainerView.swift in Sources */,
 				02B9F79D290ED416005973AE /* SceneDelegate.swift in Sources */,
 				0267DBF82917F42200F257AD /* HomeContentView.swift in Sources */,
+				0267DC0129196D8900F257AD /* TestCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
