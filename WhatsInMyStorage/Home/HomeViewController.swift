@@ -67,8 +67,8 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
             .bind(onNext: { [weak self] in
                 guard let self else { return }
                 
-                let myStorageViewController = MyStorageViewController()
-                myStorageViewController.reactor = MyStorageReactor()
+                let myStorageViewController = MyStorageTableViewController()
+//                myStorageViewController.reactor = MyStorageReactor()
                 
                 self.navigationController?.pushViewController(myStorageViewController, animated: true)
             })

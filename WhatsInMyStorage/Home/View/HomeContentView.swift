@@ -18,14 +18,6 @@ final class HomeContentView: UIView {
     /// 재고 관리 버튼
     let storageManageButton = UIButton()
     
-    
-    /// 테스트 CollectionView
-    var testCollectionView = UICollectionView(frame: .zero)
-    let testFlowLayout = UICollectionViewFlowLayout()
-    let cellTemplate = TestCell()
-    var testData: [TestData] = []
-    
-    
     @Proxy(\HomeContentView.storeLabel.text)
     var storeName: String? {
         didSet {
@@ -63,25 +55,6 @@ final class HomeContentView: UIView {
             $0.titleLabel?.textAlignment = .center
         }
         self.addSubview(self.storageManageButton)
-        
-        
-        self.testCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.testFlowLayout)
-        self.testFlowLayout.minimumLineSpacing = 8.0
-        self.testFlowLayout.minimumInteritemSpacing = 0.0
-        self.testCollectionView.then {
-            $0.backgroundColor = .white
-            $0.dataSource = self
-            $0.delegate = self
-            $0.register(TestCell.self, forCellWithReuseIdentifier: "TestCell")
-        }
-        
-        self.addSubview(self.testCollectionView)
-        
-    }
-    
-    func configureTestCell(testData: [TestData]) {
-        self.testData = testData
-        self.testCollectionView.reloadData()
     }
     
     override func layoutSubviews() {
@@ -93,7 +66,6 @@ final class HomeContentView: UIView {
     private func performLayout() {
         self.storeLabel.pin.top().horizontally(16.0).minHeight(100.0).sizeToFit(.width)
         self.storageManageButton.pin.below(of: self.storeLabel).margin(16.0).horizontally().height(50.0).sizeToFit(.width)
-        self.testCollectionView.pin.below(of: self.storageManageButton).margin(16.0).horizontally().bottom().sizeToFit(.width)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -102,22 +74,6 @@ final class HomeContentView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
-extension HomeContentView: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.testData.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TestCell", for: indexPath) as! TestCell
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return
     }
     
 }

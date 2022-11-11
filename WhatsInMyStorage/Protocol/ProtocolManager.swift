@@ -22,6 +22,8 @@ protocol UIViewControllerDelegate {
 
 extension UIViewControllerDelegate {
     func setNavigationBar() { }
+    func setLayout() { }
+    func setRx() { }
 }
 
 // @유현지 탭바 컨트롤러 프로토콜
