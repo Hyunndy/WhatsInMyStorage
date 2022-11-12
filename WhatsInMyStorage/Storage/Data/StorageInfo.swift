@@ -8,6 +8,6 @@
 import Foundation
 
 struct StorageData {
-    let name: String
+    let product: String
     var quantity: Int
 }

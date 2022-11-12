@@ -26,6 +26,11 @@ extension UIViewControllerDelegate {
     func setRx() { }
 }
 
+protocol ReactorViewControllerDelegate: UIViewControllerDelegate, View {
+    func bindAction()
+    func bindState()
+}
+
 // @유현지 탭바 컨트롤러 프로토콜
 protocol UITabBarItemControllerDelegate: UIViewController {
     var customTabBarItem: UITabBarItem { get }
