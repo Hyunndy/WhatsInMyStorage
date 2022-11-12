@@ -46,9 +46,13 @@ class UserSettingViewController: UIViewController, UIViewControllerDelegate {
             strongSelf.mainView.updateTexts(firstText: paragraphs[0], secondText: paragraphs[1])
         }
 
-        ContentService.shared.fetchImage(width: Int.random(in: 200..<500), height: Int.random(in: 200..<500)) { [weak self] (result) in
-            guard let strongSelf = self, case let .success(image) = result else { return }
-            strongSelf.mainView.updateImage(image)
+        Task {
+            let image = try await ContentService.shared.asyncFetch(width: Int.random(in: 200..<500), height: Int.random(in: 200..<500))
+            self.mainView.updateImage(image)
+            
+//        ContentService.shared.fetchImage(width: Int.random(in: 200..<500), height: Int.random(in: 200..<500)) { [weak self] (result) in
+//            guard let strongSelf = self, case let .success(image) = result else { return }
+//            strongSelf.mainView.updateImage(image)
         }
     }
     

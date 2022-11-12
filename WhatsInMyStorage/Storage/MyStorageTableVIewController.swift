@@ -75,8 +75,9 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         
         self.title = "재고 관리"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-        self.navigationItem.leftBarButtonItem = self.editButton
-        self.navigationItem.rightBarButtonItem = self.addButton
+        self.navigationItem.rightBarButtonItems = [self.addButton, self.editButton]
+        
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
     
     
