@@ -71,7 +71,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     
     func setNavigationBar() {
         self.navigationItem.hidesBackButton = true
-        
+        self.navigationController?.isNavigationBarHidden = false
         
         self.title = "재고 관리"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]

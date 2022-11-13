@@ -54,6 +54,10 @@ final class HomeReactor: Reactor {
             .map {
                 guard let paragraph = $0 as? [String] else { return "" }
                 
-                return paragraph[0] }
+                print(paragraph[0])
+                
+                return "Kiki's Delivery Store"
+                
+            }
     }
 }

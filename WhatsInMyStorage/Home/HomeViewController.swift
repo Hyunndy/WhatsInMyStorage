@@ -42,6 +42,7 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.setNavigationBar()
         self.setUI()
         self.setRx()
         
@@ -54,6 +55,10 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
         
     }
     
+    func setNavigationBar() {
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
     func setUI() {
         //
     }
@@ -63,6 +68,7 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
     }
     
     func setRx() {
+        
         self.mainView.rx.tapStorageManage?
             .bind(onNext: { [weak self] in
                 guard let self else { return }
@@ -73,8 +79,6 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
                 self.navigationController?.show(myStorageViewController, sender: nil)
             })
             .disposed(by: self.disposeBag)
-        
-        
     }
 }
 

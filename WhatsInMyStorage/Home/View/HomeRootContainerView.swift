@@ -32,6 +32,7 @@ final class HomeRootContainerView: UIView {
     private func setUI() {
         self.addSubview(self.scrollView)
         _ = self.scrollView.then {
+            $0.contentInsetAdjustmentBehavior = .never
             $0.alwaysBounceVertical = true
         }
         
