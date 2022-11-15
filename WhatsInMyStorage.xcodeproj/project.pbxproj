@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */; };
+		024B3E682923B24500D79A04 /* ReactorKitPracticeReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */; };
 		02612D9A291E7A8300E9C36E /* MyStorageTableVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612D99291E7A8300E9C36E /* MyStorageTableVIewController.swift */; };
 		02612D9C291E7C3000E9C36E /* MyStorageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612D9B291E7C3000E9C36E /* MyStorageTableView.swift */; };
 		02612D9F291E7C6B00E9C36E /* MyStorageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612D9E291E7C6B00E9C36E /* MyStorageCell.swift */; };
@@ -34,6 +36,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeViewController.swift; sourceTree = "<group>"; };
+		024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeReactor.swift; sourceTree = "<group>"; };
 		02612D99291E7A8300E9C36E /* MyStorageTableVIewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageTableVIewController.swift; sourceTree = "<group>"; };
 		02612D9B291E7C3000E9C36E /* MyStorageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageTableView.swift; sourceTree = "<group>"; };
 		02612D9E291E7C6B00E9C36E /* MyStorageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageCell.swift; sourceTree = "<group>"; };
@@ -76,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		024B3E642923AD0900D79A04 /* ReactorKitPractice */ = {
+			isa = PBXGroup;
+			children = (
+				024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */,
+				024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */,
+			);
+			path = ReactorKitPractice;
+			sourceTree = "<group>";
+		};
 		02612D9D291E7C5B00E9C36E /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +181,7 @@
 		02B9F799290ED416005973AE /* WhatsInMyStorage */ = {
 			isa = PBXGroup;
 			children = (
+				024B3E642923AD0900D79A04 /* ReactorKitPractice */,
 				0267DBF12917F26A00F257AD /* Home */,
 				02C53F232911612900974031 /* PropertyWrapper */,
 				02C53F1C29115C7C00974031 /* Protocol */,
@@ -360,8 +374,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */,
 				02612DA6291FBB2C00E9C36E /* MyStorageCellReactor.swift in Sources */,
 				02612D9F291E7C6B00E9C36E /* MyStorageCell.swift in Sources */,
+				024B3E682923B24500D79A04 /* ReactorKitPracticeReactor.swift in Sources */,
 				0267DBE9291681B200F257AD /* ContentService.swift in Sources */,
 				02612DA4291FAC5300E9C36E /* MyStorageTableViewHeader.swift in Sources */,
 				02B9F79F290ED416005973AE /* ViewController.swift in Sources */,
