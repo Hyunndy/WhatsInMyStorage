@@ -76,7 +76,10 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
                 let myStorageViewController = MyStorageTableViewController()
                 myStorageViewController.reactor = MyStorageReactor()
                 
-                self.navigationController?.show(ReactorKitPractiveViewController(), sender: nil)
+                let viewController = ReactorKitPractiveViewController()
+                viewController.reactor = ReactorKitPracticeReactor()
+                
+                self.navigationController?.show(viewController, sender: nil)
             })
             .disposed(by: self.disposeBag)
     }

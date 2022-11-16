@@ -11,12 +11,15 @@ import PinLayout
 import ReactorKit
 import RxSwift
 import RxCocoa
+import SafariServices
 
 class customCell: UITableViewCell {
     let titleLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: "customCell")
+        
+        self.contentView.backgroundColor = .white
         
         self.contentView.addSubview(self.titleLabel)
         _ = self.titleLabel.then {
@@ -62,6 +65,7 @@ class ReactorKitPractiveViewController: UIViewController {
         
         self.view.addSubview(self.tableView)
         self.tableView.then {
+            $0.backgroundColor = .white
             $0.register(customCell.self, forCellReuseIdentifier: "customCell")
             $0.delegate = self
             $0.dataSource = self
@@ -102,30 +106,40 @@ extension ReactorKitPractiveViewController: View {
     func bind(reactor: ReactorKitPracticeReactor) {
         
         self.setAction(reactor: reactor)
+        self.setState(reactor: reactor)
+        
     }
     
     private func setAction(reactor: ReactorKitPracticeReactor) {
         
         // 페이징 처리!
-        // Rx로 받은 이벤트를 Reactor의 Action으로 보낸다!
         self.tableView.rx.contentOffset
-            .filter { [weak self] offset in
+            .filter({ [weak self] offset in
                 guard let self else { return false }
                 
-                guard self.tableView.frame.height > 0.0 else { return false }
-                
-                let isNextPage = offset.y + self.tableView.frame.height >= self.tableView.contentSize.height - 100.0 // 아마 너무 밑에 가서 하는것보단 좀 떨어져있는게 좋으니까 100을 한 듯!
-                
-                return isNextPage
-            }
+                return (offset.y + self.tableView.frame.height >= self.tableView.contentSize.height - 100.0)
+            })
             .map { _ in Reactor.Action.loadNextPage }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        
+        // search
+        self.searchViewController.searchBar.rx.text
+            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+            .map { Reactor.Action.updateQuary($0) }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
     
-    
-    
+    private func setState(reactor: ReactorKitPracticeReactor) {
+
+        // State
+        // 아 이게뭔지 진짜 모르겠다
+        reactor.state.map { $0.repose }
+          .bind(to: tableView.rx.items(cellIdentifier: "cell")) { indexPath, repo, cell in
+            cell.textLabel?.text = repo
+          }
+          .disposed(by: disposeBag)
+    }
 }
 
