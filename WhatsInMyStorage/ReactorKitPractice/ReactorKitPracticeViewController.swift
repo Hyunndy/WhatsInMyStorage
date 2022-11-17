@@ -1,7 +1,7 @@
 //
 //  ReactorKitPractice.swift
 //  WhatsInMyStorage
-//
+//x
 //  Created by hyunndy on 2022/11/15.
 //
 
@@ -53,6 +53,7 @@ class ReactorKitPractiveViewController: UIViewController {
     
     let tableView = UITableView(frame: .zero, style: .plain)
     let searchViewController = UISearchController(searchResultsController: nil)
+    var data = [String]()
     
     
     var disposeBag = DisposeBag()
@@ -78,6 +79,11 @@ class ReactorKitPractiveViewController: UIViewController {
         
         
         searchViewController.isActive = true
+        
+        self.tableView.rx.contentOffset.bind(onNext: {
+            print($0)
+
+        }).disposed(by: self.disposeBag)
     }
     
     override func viewWillLayoutSubviews() {
@@ -89,13 +95,21 @@ class ReactorKitPractiveViewController: UIViewController {
 
 extension ReactorKitPractiveViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.data.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell") as! customCell
-        cell.titleLabel.text = "아이우에오"
+        cell.titleLabel.text = self.data[indexPath.item]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        guard let repo = reactor?.currentState.repos[indexPath.row] else { return }
+        guard let url = URL(string: "https://github.com/\(repo)") else { return }
+        let viewController = SFSafariViewController(url: url)
+        self.searchViewController.present(viewController, animated: true, completion: nil)
     }
 }
 
@@ -105,41 +119,57 @@ extension ReactorKitPractiveViewController: View {
 
     func bind(reactor: ReactorKitPracticeReactor) {
         
-        self.setAction(reactor: reactor)
-        self.setState(reactor: reactor)
-        
-    }
-    
-    private func setAction(reactor: ReactorKitPracticeReactor) {
-        
-        // 페이징 처리!
-        self.tableView.rx.contentOffset
-            .filter({ [weak self] offset in
-                guard let self else { return false }
-                
-                return (offset.y + self.tableView.frame.height >= self.tableView.contentSize.height - 100.0)
-            })
-            .map { _ in Reactor.Action.loadNextPage }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        // search
-        self.searchViewController.searchBar.rx.text
-            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
-            .map { Reactor.Action.updateQuary($0) }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-    }
-    
-    private func setState(reactor: ReactorKitPracticeReactor) {
+        // Action
+        searchViewController.searchBar.rx.text
+          .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+          .map { Reactor.Action.updateQuery($0) }
+          .bind(to: reactor.action)
+          .disposed(by: disposeBag)
+
+        tableView.rx.contentOffset
+          .filter { [weak self] offset in
+              print(offset)
+              
+              
+            guard let `self` = self else { return false }
+            guard self.tableView.frame.height > 0 else { return false }
+            return offset.y + self.tableView.frame.height >= self.tableView.contentSize.height - 100
+          }
+          .map { _ in Reactor.Action.loadNextPage }
+          .bind(to: reactor.action)
+          .disposed(by: disposeBag)
 
         // State
-        // 아 이게뭔지 진짜 모르겠다
-        reactor.state.map { $0.repose }
-          .bind(to: tableView.rx.items(cellIdentifier: "cell")) { indexPath, repo, cell in
-            cell.textLabel?.text = repo
-          }
-          .disposed(by: disposeBag)
+        reactor.state.map { $0.repos }
+            .bind(onNext: { [weak self] repo in
+                guard let self else { return }
+                
+                self.data = repo
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                
+            }).disposed(by: self.disposeBag)
+//          .bind(to: tableView.rx.items(cellIdentifier: "cell")) { indexPath, repo, cell in
+//            cell.textLabel?.text = repo
+//          }
+//          .disposed(by: disposeBag)
+
+        // View
+        self.tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self, weak reactor] indexPath in
+            
+            guard let `self` = self else { return }
+            self.view.endEditing(true)
+            self.tableView.deselectRow(at: indexPath, animated: false)
+            guard let repo = reactor?.currentState.repos[indexPath.row] else { return }
+            guard let url = URL(string: "https://github.com/\(repo)") else { return }
+            let viewController = SFSafariViewController(url: url)
+            self.searchViewController.present(viewController, animated: true, completion: nil)
+            
+            
+        }).disposed(by: self.disposeBag)
     }
 }
 
