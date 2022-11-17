@@ -68,22 +68,16 @@ class ReactorKitPractiveViewController: UIViewController {
         self.tableView.then {
             $0.backgroundColor = .white
             $0.register(customCell.self, forCellReuseIdentifier: "customCell")
-            $0.delegate = self
-            $0.dataSource = self
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
         searchViewController.isActive = true
         
-        self.tableView.rx.contentOffset.bind(onNext: {
-            print($0)
 
-        }).disposed(by: self.disposeBag)
+        self.tableView.rx.setDelegate(self).disposed(by: self.disposeBag)
+        self.tableView.rx.setDataSource(self).disposed(by: self.disposeBag)
     }
     
     override func viewWillLayoutSubviews() {
@@ -117,15 +111,24 @@ extension ReactorKitPractiveViewController: View {
     
     typealias Reactor = ReactorKitPracticeReactor
 
-    func bind(reactor: ReactorKitPracticeReactor) {
+    /*
+     Action
+     1) SearchBar에서 검색어 입력
+     
+     
+     */
+    private func bindAction(reactor: ReactorKitPracticeReactor) {
         
-        // Action
-        searchViewController.searchBar.rx.text
-          .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
-          .map { Reactor.Action.updateQuery($0) }
-          .bind(to: reactor.action)
+        /*
+         Action.updateQuery
+         */
+        searchViewController.searchBar.rx.text // SearchBar에 들어오는 text의 ControlProperty
+          .throttle(.milliseconds(300), scheduler: MainScheduler.instance) // throttle: 지정한 주기 안에 가장 마지막에 들어온 하나의 Event만을 구독자에게 전달한다.
+          .map { Reactor.Action.updateQuery($0) } // 방출된 text를 Reactor.Action.updateQuery($0) 형태로 구독자에게 전달한다.
+          .bind(to: reactor.action) // reactor의 ActionSubject에 bind 시켜서 방출시킨다!!
           .disposed(by: disposeBag)
 
+        
         tableView.rx.contentOffset
           .filter { [weak self] offset in
               print(offset)
@@ -138,7 +141,11 @@ extension ReactorKitPractiveViewController: View {
           .map { _ in Reactor.Action.loadNextPage }
           .bind(to: reactor.action)
           .disposed(by: disposeBag)
-
+    }
+    
+    func bind(reactor: ReactorKitPracticeReactor) {
+    
+        self.bindAction(reactor: reactor)
         // State
         reactor.state.map { $0.repos }
             .bind(onNext: { [weak self] repo in
@@ -151,7 +158,7 @@ extension ReactorKitPractiveViewController: View {
                 }
                 
             }).disposed(by: self.disposeBag)
-//          .bind(to: tableView.rx.items(cellIdentifier: "cell")) { indexPath, repo, cell in
+//          .bind(to: tableView.rx.items(cellIdentifier: "customCell")) { indexPath, repo, cell in
 //            cell.textLabel?.text = repo
 //          }
 //          .disposed(by: disposeBag)

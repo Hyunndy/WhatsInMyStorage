@@ -78,7 +78,6 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
                 
                 let viewController = ReactorKitPractiveViewController()
                 viewController.reactor = ReactorKitPracticeReactor()
-                
                 self.navigationController?.show(viewController, sender: nil)
             })
             .disposed(by: self.disposeBag)
