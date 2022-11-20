@@ -26,7 +26,7 @@ class MyStorageTableViewHeader: UITableViewHeaderFooterView {
         self.contentView.addSubview(self.titleLabel)
         _ = self.titleLabel.then {
             $0.text = "Product"
-            $0.textColor = UIColor.blue
+            $0.textColor = UIColor.wms.blue
             $0.textAlignment = .left
             $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
         }
@@ -34,7 +34,7 @@ class MyStorageTableViewHeader: UITableViewHeaderFooterView {
         self.contentView.addSubview(self.quantityLabel)
         _ = self.quantityLabel.then {
             $0.text = "Quantity"
-            $0.textColor = UIColor.blue
+            $0.textColor = UIColor.wms.blue
             $0.textAlignment = .left
             $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
         }

@@ -27,8 +27,8 @@ extension UIViewControllerDelegate {
 }
 
 protocol ReactorViewControllerDelegate: UIViewControllerDelegate, View {
-    func bindAction()
-    func bindState()
+    func bindAction(reactor: Reactor)
+    func bindState(reactor: Reactor)
 }
 
 // @유현지 탭바 컨트롤러 프로토콜

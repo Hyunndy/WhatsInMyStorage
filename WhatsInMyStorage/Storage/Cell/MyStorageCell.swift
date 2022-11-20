@@ -53,19 +53,18 @@ class MyStorageCell: UITableViewCell {
             $0.textAlignment = .center
             $0.font = .systemFont(ofSize: 20.0, weight: .regular)
             $0.textColor = UIColor.black
-            $0.backgroundColor = .blue
         }
         
         self.contentView.addSubview(self.minusButton)
         _ = self.minusButton.then {
             $0.contentMode = .center
             $0.setTitle("-", for: .normal)
-            $0.setTitleColor(UIColor.blue, for: .normal)
-            $0.backgroundColor = UIColor.lightGray
+            $0.setTitleColor(UIColor.wms.blue, for: .normal)
+            $0.backgroundColor = UIColor.wms.gray
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = UIColor.orange.cgColor
+//            $0.layer.borderWidth = 0.1
+//            $0.layer.borderColor = UIColor.black.cgColor
         }
         
         self.contentView.addSubview(self.quantityLabel)
@@ -73,19 +72,18 @@ class MyStorageCell: UITableViewCell {
             $0.textAlignment = .center
             $0.font = .systemFont(ofSize: 20.0, weight: .regular)
             $0.textColor = UIColor.black
-            $0.backgroundColor = .blue
         }
         
         self.contentView.addSubview(self.plusButton)
         _ = self.plusButton.then {
             $0.contentMode = .center
             $0.setTitle("+", for: .normal)
-            $0.setTitleColor(UIColor.blue, for: .normal)
-            $0.backgroundColor = UIColor.lightGray
+            $0.setTitleColor(UIColor.wms.blue, for: .normal)
+            $0.backgroundColor = UIColor.wms.gray
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = UIColor.orange.cgColor
+//            $0.layer.borderWidth = 0.1
+//            $0.layer.borderColor = UIColor.black.cgColor
         }
     }
     

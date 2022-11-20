@@ -12,5 +12,5 @@ target 'WhatsInMyStorage' do
     pod 'FlexLayout'
     pod 'PinLayout'
     pod 'Then'
-    pod 'ReactorKit'
+    pod 'lottie-ios'
 end

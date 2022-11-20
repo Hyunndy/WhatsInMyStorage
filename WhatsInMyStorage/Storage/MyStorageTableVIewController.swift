@@ -12,9 +12,7 @@ import RxCocoa
 import RxSwift
 
 /*
- 
- 재고 관리 UITableView
- 
+ 재고 관리 UITableView 
  */
 class MyStorageTableViewController: UIViewController, ReactorViewControllerDelegate {
     
@@ -24,6 +22,12 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     var mainView: MyStorageTableView {
         return self.view as! MyStorageTableView
     }
+    
+    struct Observable {
+        let fetch = PublishRelay<Void>()
+    }
+    
+    let rx = Observable()
     
     var disposeBag = DisposeBag()
     
@@ -61,7 +65,8 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         super.viewDidLoad()
         
         self.setNavigationBar()
-        self.mainView.configure(storage: [StorageData(product: "양파", quantity: 2), StorageData(product: "가공육", quantity: 2)])
+        self.rx.fetch.accept(())
+        
     }
     
     func setUI() {
@@ -78,19 +83,65 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         self.navigationItem.rightBarButtonItems = [self.addButton, self.editButton]
         
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+//        self.navigationController?.navigationBar.backgroundColor = .white
+        
+//        let appearance = UINavigationBarAppearance()
+//        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+//        appearance.backgroundColor = .white
+//
+//        navigationController?.navigationBar.standardAppearance = appearance
+//        navigationController?.navigationBar.compactAppearance = appearance
+//        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
     
     
     func bind(reactor: MyStorageReactor) {
-        self.bindAction()
-        self.bindState()
+        self.bindAction(reactor: reactor)
+        self.bindState(reactor: reactor)
     }
     
-    func bindAction() {
+    /// Reactor에 Action 보내기
+    func bindAction(reactor: MyStorageReactor) {
+        
+        // Fetch
+        self.rx.fetch
+            .map { Reactor.Action.fetch }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
         
     }
-    
-    func bindState() {
+
+    /// Reactor에서 State 받기
+    func bindState(reactor: MyStorageReactor) {
         
+        /// 인디케이터 .pulse(\.$myFavoriteTicket)
+        reactor
+            .skipInitPulse(\.$isPlayIndicator)
+            .bind(onNext: { isPlayIndicator in
+                
+                /// 인디케이터 어케하면 예쁘게 처리할 수 있을지?ㅎㅎ 고민좀?ㅎ
+                let indicator = self.mainView.indicatorView
+                if isPlayIndicator == true {
+                    indicator?.isHidden = false
+                    indicator?.play(completion: { _ in
+                        indicator?.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: self.disposeBag)
+        
+        // Fetch
+        reactor
+            .skipInitPulse(\.$storageData)
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                
+                print("악!!!\($0)")
+                
+                /// Relay는 Error 이벤트로 종료되지 않기 때문에 Observable을 Relay에 bind 시키는것은 지양하는게 좋다.
+                self.mainView.rx.storageData.accept($0 ?? [StorageData]())
+                
+            })
+            .disposed(by: self.disposeBag)
     }
 }

@@ -24,7 +24,7 @@ import ReactorKit
 
 final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
     typealias mainViewType = HomeRootContainerView
-    
+
     var mainView: mainViewType {
         return self.view as! HomeRootContainerView
     }
@@ -32,6 +32,19 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
     var disposeBag = DisposeBag()
     
     let fetch = PublishRelay<Void>()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        
+    }
     
     override func loadView() {
         super.loadView()
@@ -48,13 +61,7 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
         
         self.fetch.accept(())
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        
-    }
-    
+
     func setNavigationBar() {
         self.navigationController?.isNavigationBarHidden = true
     }
@@ -75,10 +82,9 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
                 
                 let myStorageViewController = MyStorageTableViewController()
                 myStorageViewController.reactor = MyStorageReactor()
-                
-                let viewController = ReactorKitPractiveViewController()
-                viewController.reactor = ReactorKitPracticeReactor()
-                self.navigationController?.show(viewController, sender: nil)
+                myStorageViewController.hidesBottomBarWhenPushed = true
+            
+                self.navigationController?.show(myStorageViewController, sender: nil)
             })
             .disposed(by: self.disposeBag)
     }

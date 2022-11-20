@@ -8,6 +8,9 @@
 import Foundation
 import UIKit
 import ReactorKit
+import RxSwift
+import RxCocoa
+import Lottie
 
 /*
  재고 테이블 뷰
@@ -15,19 +18,24 @@ import ReactorKit
 
 class MyStorageTableView: UIView {
     
-    weak var vcReactor: MyStorageReactor?
+    struct Observable {
+        var storageData = BehaviorRelay<[StorageData]>(value: [StorageData]())
+    }
+    
+    let rx = Observable()
+    
     let tableView = UITableView(frame: .zero, style: .grouped)
-    private var storageArray = [StorageData]()
+    
+    let disposeBag = DisposeBag()
+    
+    var indicatorView: LottieAnimationView!
     
     init(reactor: MyStorageReactor?) {
         super.init(frame: .zero)
         
-        self.vcReactor = reactor
-        
         _ = self.tableView.then {
             $0.allowsSelection = false
             $0.separatorInset = .zero
-//            $0.separatorStyle = .singleLine
             $0.backgroundColor = .white
             $0.estimatedRowHeight = 56.0
             $0.rowHeight = UITableView.automaticDimension
@@ -38,15 +46,25 @@ class MyStorageTableView: UIView {
         }
         
         self.addSubview(self.tableView)
+        
+        /// TODO: RxDataSource로 만들기
+        self.rx.storageData
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+
+                self.tableView.reloadData()
+            })
+            .disposed(by: self.disposeBag)
+        
+        self.indicatorView = .init(name: "loading").then {
+            $0.contentMode = .scaleAspectFit
+        }
+        self.addSubview(self.indicatorView)
     }
     
     private func layout() {
+        self.indicatorView.pin.center().sizeToFit()
         self.tableView.pin.all()
-    }
-    
-    func configure(storage: [StorageData]) {
-        self.storageArray = storage
-        self.tableView.reloadData()
     }
     
     override func layoutSubviews() {
@@ -62,12 +80,14 @@ class MyStorageTableView: UIView {
 
 extension MyStorageTableView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return storageArray.count
+        return self.rx.storageData.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
-        cell.configure(storage: self.storageArray[indexPath.row])
+        
+        let data = self.rx.storageData.value
+        cell.configure(storage: data[indexPath.row])
         cell.reactor = MyStorageCellReactor()
         
         return cell
@@ -80,7 +100,11 @@ extension MyStorageTableView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 45.0
+        if self.rx.storageData.value.count > 0 {
+            return 45.0
+        } else {
+            return 0.0
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
