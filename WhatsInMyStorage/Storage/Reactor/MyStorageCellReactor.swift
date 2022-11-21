@@ -24,13 +24,13 @@ final class MyStorageCellReactor: Reactor {
     
     // State is current View State
     struct State {
-        var quantity: Int
+        @Pulse var quantity: Int
     }
 
     var initialState: State
     
-    init() {
-        self.initialState = State(quantity: 0) // start from 0
+    init(quantity: Int) {
+        self.initialState = State(quantity: quantity)
     }
     
     /*

@@ -30,6 +30,7 @@
 		02B9F7A7290ED417005973AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02B9F7A5290ED417005973AE /* LaunchScreen.storyboard */; };
 		02C34452292A4D5D0055A6D6 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C34451292A4D5D0055A6D6 /* UIColor+Extension.swift */; };
 		02C34456292A930F0055A6D6 /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 02C34455292A930E0055A6D6 /* loading.json */; };
+		02C34458292BDECF0055A6D6 /* MyStorageSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C34457292BDECF0055A6D6 /* MyStorageSection.swift */; };
 		02C53F1E29115D6C00974031 /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F1D29115D6C00974031 /* ProtocolManager.swift */; };
 		02C53F2029115DC900974031 /* Deleveloper_ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = 02C53F1F29115DC900974031 /* Deleveloper_ReadMe */; };
 		02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F2129115F8F00974031 /* UserSettingViewController.swift */; };
@@ -63,6 +64,7 @@
 		02B9F7A8290ED417005973AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02C34451292A4D5D0055A6D6 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		02C34455292A930E0055A6D6 /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
+		02C34457292BDECF0055A6D6 /* MyStorageSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageSection.swift; sourceTree = "<group>"; };
 		02C53F1D29115D6C00974031 /* ProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolManager.swift; sourceTree = "<group>"; };
 		02C53F1F29115DC900974031 /* Deleveloper_ReadMe */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deleveloper_ReadMe; sourceTree = "<group>"; };
 		02C53F2129115F8F00974031 /* UserSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 		02612DA0291E7E5600E9C36E /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				02C34457292BDECF0055A6D6 /* MyStorageSection.swift */,
 				02612DA1291E7E6300E9C36E /* StorageInfo.swift */,
 			);
 			path = Data;
@@ -406,6 +409,7 @@
 				0267DBE529161CB300F257AD /* AutoSizingContainerView.swift in Sources */,
 				02612D9A291E7A8300E9C36E /* MyStorageTableVIewController.swift in Sources */,
 				0267DBE7291680A800F257AD /* AutoSizingView.swift in Sources */,
+				02C34458292BDECF0055A6D6 /* MyStorageSection.swift in Sources */,
 				02C34452292A4D5D0055A6D6 /* UIColor+Extension.swift in Sources */,
 				02612D9C291E7C3000E9C36E /* MyStorageTableView.swift in Sources */,
 				02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */,

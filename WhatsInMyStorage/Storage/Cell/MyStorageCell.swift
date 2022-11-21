@@ -136,9 +136,8 @@ extension MyStorageCell: View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        reactor.state
-            .map { $0.quantity } // 방출된 state struct에서 count만 뽑아낸다.
-            .distinctUntilChanged()
+        reactor
+            .skipInitPulse(\.$quantity)
             .map { "\($0)"}
             .bind(onNext: {
                 self.quantity = $0

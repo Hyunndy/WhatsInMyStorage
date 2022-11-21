@@ -33,3 +33,58 @@ ReactorKit을 이용해서 TableView 데이터를 받아와서 업데이트 시�
 Reactor를 처음 넣을 때 UI가 그려지기 전에 state가 방출되서 pinLayout이 아예 깨지는듯한 현상이 있었다.
 skip(1)을 하거나, VC를 Push한 후에 Reactor를 세팅해주면 발생되지 않았다.
 
+22.11.22 (화)
+ReactorKit과 UITableViewDataSource는 너무 안어울린다고 판단해서
+
+처음엔 RxSwift만으로 TableView를 구성하려고 했다..
+
+```swift
+self.rx.storageData
+            .bind(to: self.tableView.rx.items(cellIdentifier: "MyStorageCell")) { (indexPath, data, cell) in
+                guard let cell = cell as? MyStorageCell else { return }
+
+                cell.reactor = MyStorageCellReactor()
+                cell.configure(storage: data)
+
+            }
+            .disposed(by: self.disposeBag)
+```
+
+요런식으로.
+
+근데 이렇게 하면.. 데이터는 바인딩 예쁘게된다.
+
+하지만? 내가 원하는 기능 중에는 Edit, +, move가 되야된다는건데…
+
+canMoveAt 함수가 UITableViewDataSource에 있다.
+
+결국엔 DataSource가 필요하다는 소리 ㅠㅠ
+
+UITableViewDataSource를 채택하면 cellForRowAt은 무조건 정의해야한다 ㅠㅠ 흑흑
+
+그래서 울며겨자먹기로 RxDataSource..해버렸다
+
+아니나다를까 너무불편함..
+
+정의하는것도 너무많고
+
+그 중에 제일 이해안되는건
+
+```swift
+let dataSource = RxTableViewSectionedReloadDataSource<MyStorageSectionData> { dataSource, tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
+            cell.configure(storage: item)
+            cell.reactor = MyStorageCellReactor(quantity: item.quantity)
+            return cell
+        }
+
+self.rx.storageSectionData
+            .bind(to: self.tableView.rx.items(dataSource: self.dataSource))
+            .disposed(by: self.disposeBag)
+```
+
+여기서 저 rx.storageSectionData는 배열로 들어가야한다는것이다.
+
+내가 섹션을 1개만 한다고해서 저걸 배열로 안넣을 수가 없다.
+
+이게 제일 불편하다.

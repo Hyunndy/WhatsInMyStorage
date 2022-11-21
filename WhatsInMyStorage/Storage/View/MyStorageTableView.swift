@@ -11,6 +11,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 import Lottie
+import RxDataSources
 
 /*
  재고 테이블 뷰
@@ -19,47 +20,56 @@ import Lottie
 class MyStorageTableView: UIView {
     
     struct Observable {
-        var storageData = BehaviorRelay<[StorageData]>(value: [StorageData]())
+        var storageSectionData = BehaviorRelay<[MyStorageSectionData]>(value: [MyStorageSectionData(items: [StorageData]())])
     }
     
     let rx = Observable()
-    
-    let tableView = UITableView(frame: .zero, style: .grouped)
-    
     let disposeBag = DisposeBag()
     
+    let tableView = UITableView(frame: .zero, style: .grouped)
     var indicatorView: LottieAnimationView!
     
-    init(reactor: MyStorageReactor?) {
-        super.init(frame: .zero)
-        
+    var dataSource: RxTableViewSectionedReloadDataSource<MyStorageSectionData>!
+    
+    func setUI() {
+        self.addSubview(self.tableView)
         _ = self.tableView.then {
             $0.allowsSelection = false
             $0.separatorInset = .zero
             $0.backgroundColor = .white
             $0.estimatedRowHeight = 56.0
             $0.rowHeight = UITableView.automaticDimension
-            $0.dataSource = self
-            $0.delegate = self
             $0.register(MyStorageTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MyStorageTableViewHeader.reuseIdentifier)
             $0.register(MyStorageCell.self, forCellReuseIdentifier: "MyStorageCell")
         }
-        
-        self.addSubview(self.tableView)
-        
-        /// TODO: RxDataSource로 만들기
-        self.rx.storageData
-            .subscribe(onNext: { [weak self] _ in
-                guard let self else { return }
-
-                self.tableView.reloadData()
-            })
-            .disposed(by: self.disposeBag)
         
         self.indicatorView = .init(name: "loading").then {
             $0.contentMode = .scaleAspectFit
         }
         self.addSubview(self.indicatorView)
+    }
+    
+    func setRx() {
+        self.dataSource = RxTableViewSectionedReloadDataSource<MyStorageSectionData> { dataSource, tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
+            cell.configure(storage: item)
+            cell.reactor = MyStorageCellReactor(quantity: item.quantity)
+            return cell
+        }
+        
+        self.tableView.rx.setDelegate(self)
+            .disposed(by: self.disposeBag)
+        
+        self.rx.storageSectionData
+            .bind(to: self.tableView.rx.items(dataSource: self.dataSource))
+            .disposed(by: self.disposeBag)
+    }
+    
+    init() {
+        super.init(frame: .zero)
+
+        self.setUI()
+        self.setRx()
     }
     
     private func layout() {
@@ -78,48 +88,31 @@ class MyStorageTableView: UIView {
     }
 }
 
-extension MyStorageTableView: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.rx.storageData.value.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
-        
-        let data = self.rx.storageData.value
-        cell.configure(storage: data[indexPath.row])
-        cell.reactor = MyStorageCellReactor()
-        
-        return cell
-    }
-    
+extension MyStorageTableView: UITableViewDelegate {
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         // The UITableView will call the cell's sizeThatFit() method to compute the height.
         // WANRING: You must also set the UITableView.estimatedRowHeight for this to work.
         return UITableView.automaticDimension
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if self.rx.storageData.value.count > 0 {
+        
+        let data = self.rx.storageSectionData.value[0]
+        if data.items.count > 0 {
             return 45.0
         } else {
             return 0.0
         }
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableViewHeader.reuseIdentifier) as! MyStorageTableViewHeader
-        
-        header.configure(title: "Product")
-        
+
         return header
     }
     
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
+
     }
 }

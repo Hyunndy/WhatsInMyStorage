@@ -40,10 +40,6 @@ class MyStorageTableViewHeader: UITableViewHeaderFooterView {
         }
     }
     
-    func configure(title: String) {
-        self.titleLabel.text = title
-    }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         

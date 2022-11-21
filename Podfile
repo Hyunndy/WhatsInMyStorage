@@ -13,4 +13,5 @@ target 'WhatsInMyStorage' do
     pod 'PinLayout'
     pod 'Then'
     pod 'lottie-ios'
+    pod 'RxDataSources', '~> 5.0'
 end
