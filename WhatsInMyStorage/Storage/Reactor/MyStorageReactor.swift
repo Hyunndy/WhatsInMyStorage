@@ -21,19 +21,20 @@ final class MyStorageReactor: Reactor {
     /// 작업에 대한 명칭
     enum Action {
         case fetch
+        case insertStorage([MyStorageSectionData])
     }
     
     /// 실제 해야될 작업
     enum Mutation {
         case setIndicator(Bool)
-        case setStorageData([StorageData])
+        case setStorageData([MyStorageSectionData])
 //        case appendStorageData([StorageData], nextPage: Int?)
     }
     
     /// 실제 View에 전달될 정보
     struct State {
         @Pulse var isPlayIndicator: Bool?
-        @Pulse var storageData: [StorageData]?
+        @Pulse var storageData: [MyStorageSectionData]?
 //        var nextPage: Int?
     }
     
@@ -61,6 +62,13 @@ final class MyStorageReactor: Reactor {
                 // 3) 인디케이터 멈춤
                 Observable.just(Mutation.setIndicator(false))
             ])
+        case let .insertStorage(currentStorage):
+            return Observable.concat([
+                
+                // 1) 데이터 집어넣기
+                self.addStorageData(currentData: currentStorage)
+                    .map { Mutation.setStorageData($0) },
+            ])
         }
     }
     
@@ -82,13 +90,26 @@ final class MyStorageReactor: Reactor {
     }
     
     
-    private func getStorageData(page: Int) -> Observable<[StorageData]> {
+    private func getStorageData(page: Int) -> Observable<[MyStorageSectionData]> {
         
         let storageData = [StorageData(product: "양파", quantity: 1),
                            StorageData(product: "가공육", quantity: 2),
                            StorageData(product: "토마토", quantity: 3),
                            StorageData(product: "소세지", quantity: 4)]
          
-        return Observable.just(storageData)
+        var intialSectionData = [MyStorageSectionData(items: storageData)]
+        
+        return Observable.just(intialSectionData)
+    }
+    
+    private func addStorageData(currentData: [MyStorageSectionData]) -> Observable<[MyStorageSectionData]> {
+        
+        var convertedStorageData = currentData
+        
+        let addStorageData = [StorageData(product: "핫도그빵", quantity: 10)]
+        
+        convertedStorageData[0].items.append(contentsOf: addStorageData)
+        
+        return Observable.just(convertedStorageData)
     }
 }

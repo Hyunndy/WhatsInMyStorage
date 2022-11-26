@@ -11,6 +11,7 @@ import FlexLayout
 import PinLayout
 import ReactorKit
 import RxSwift
+import RxCocoa
 
 class MyStorageCell: UITableViewCell {
 
@@ -27,7 +28,13 @@ class MyStorageCell: UITableViewCell {
     @Proxy(\MyStorageCell.quantityLabel.text)
     var quantity: String?
     
-    /// @유현지 disposeBag 객체 해제해줘야하는지?
+    struct Observable {
+        /// 양 조절
+        let changeQuantity = PublishRelay<Int>()
+    }
+    
+    let rx = Observable()
+    
     var disposeBag = DisposeBag()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -138,9 +145,10 @@ extension MyStorageCell: View {
         
         reactor
             .skipInitPulse(\.$quantity)
-            .map { "\($0)"}
-            .bind(onNext: {
-                self.quantity = $0
+            .bind(onNext: { [weak self] in
+                guard let self else { return }
+                
+                self.rx.changeQuantity.accept($0)
             } )
             .disposed(by: self.disposeBag)
     }

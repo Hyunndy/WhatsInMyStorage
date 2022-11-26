@@ -20,10 +20,12 @@ import RxDataSources
 class MyStorageTableView: UIView {
     
     struct Observable {
-        var storageSectionData = BehaviorRelay<[MyStorageSectionData]>(value: [MyStorageSectionData(items: [StorageData]())])
+        /// 재고 목록 Section Data
+        unowned var storageSectionData: BehaviorRelay<[MyStorageSectionData]>!
     }
     
-    let rx = Observable()
+    var rx = Observable()
+    
     let disposeBag = DisposeBag()
     
     let tableView = UITableView(frame: .zero, style: .grouped)
@@ -50,24 +52,98 @@ class MyStorageTableView: UIView {
     }
     
     func setRx() {
+        
+        // CollectionView.DataSource 세팅
         self.dataSource = RxTableViewSectionedReloadDataSource<MyStorageSectionData> { dataSource, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
             cell.configure(storage: item)
             cell.reactor = MyStorageCellReactor(quantity: item.quantity)
+            
+            cell.rx.changeQuantity
+                .subscribe(onNext: { [weak self] in
+                    guard let self else { return }
+                    
+                    var value = self.rx.storageSectionData.value
+                    value[indexPath.section].items[indexPath.row].quantity = $0
+                    
+                    self.rx.storageSectionData.accept(value)
+                    
+                })
+                .disposed(by: cell.disposeBag)
+            
             return cell
         }
         
+        // CollectionView.Delegate 세팅
         self.tableView.rx.setDelegate(self)
             .disposed(by: self.disposeBag)
         
+        self.dataSource
+            .canEditRowAtIndexPath = { (_, _) in
+                return true
+            }
+        
+        self.dataSource
+            .canMoveRowAtIndexPath = { (_, _) in
+                return true
+            }
+        
+        self.tableView.rx.itemMoved
+            .observe(on: MainScheduler.asyncInstance)
+            .withUnretained(self)
+            .bind { [weak self] tableView, indexPath in
+                guard let self else { return }
+                
+                let sourceIndexPath = indexPath.sourceIndex
+                let destinationIndexPath = indexPath.destinationIndex
+                
+                var sectionDataArray = self.rx.storageSectionData.value
+                
+                var currentSection = sectionDataArray[sourceIndexPath.section]
+                
+                currentSection.items.swapAt(sourceIndexPath.row, destinationIndexPath.row)
+                
+                // 섹션 업데이트!
+                sectionDataArray[sourceIndexPath.section] = currentSection
+                
+                // 최종 데이터 업데이트
+                self.rx.storageSectionData.accept(sectionDataArray)
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.tableView.rx.itemDeleted
+            .observe(on: MainScheduler.asyncInstance)
+            .withUnretained(self)
+            .bind { [weak self] tableView, indexPath in
+                guard let self else { return }
+                
+                var sectionDataArray = self.rx.storageSectionData.value
+                
+                // 현재 섹션
+                var currentSection = sectionDataArray[indexPath.section]
+                
+                // 현재 섹션의 아이템 제거
+                currentSection.items.remove(at: indexPath.row)
+                
+                // 섹션 업데이트!
+                sectionDataArray[indexPath.section] = currentSection
+                
+                // 최종 데이터 업데이트
+                self.rx.storageSectionData.accept(sectionDataArray)
+            }
+            .disposed(by: self.disposeBag)
+        
+        /// 섹션 데이터 <-> dataSource 연결
         self.rx.storageSectionData
             .bind(to: self.tableView.rx.items(dataSource: self.dataSource))
             .disposed(by: self.disposeBag)
     }
     
-    init() {
+    init(storageData: BehaviorRelay<[MyStorageSectionData]>) {
         super.init(frame: .zero)
 
+        self.rx.storageSectionData = storageData
+        
         self.setUI()
         self.setRx()
     }

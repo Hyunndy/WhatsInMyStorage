@@ -25,6 +25,8 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     
     struct Observable {
         let fetch = PublishRelay<Void>()
+        /// 재고 목록 Section Data
+        var storageSectionData = BehaviorRelay<[MyStorageSectionData]>(value: [MyStorageSectionData(items: [StorageData]())])
     }
     
     let rx = Observable()
@@ -70,7 +72,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     }
     
     func setUI() {
-        let view = MyStorageTableView()
+        let view = MyStorageTableView(storageData: self.rx.storageSectionData)
         self.view = view
     }
     
@@ -109,6 +111,12 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        // + 버튼
+        self.addButton.rx
+            .tap
+            .map { Reactor.Action.insertStorage(self.rx.storageSectionData.value) }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
 
     /// Reactor에서 State 받기
@@ -133,17 +141,13 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         // Fetch
         reactor
             .skipInitPulse(\.$storageData)
-            .map {
-                /// 섹션이 1개 밖에 없기 때문에 map으로 던져준다.
-                return MyStorageSectionData(items: $0 ?? [StorageData]())
-            }
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 
-                print("[StorageData]:: \($0)")
+                print("[StorageData]:: \($0?[0].items)")
                 
                 /// Relay는 Error 이벤트로 종료되지 않기 때문에 Observable을 Relay에 bind 시키는것은 지양하는게 좋다.
-                self.mainView.rx.storageSectionData.accept([$0])
+                self.rx.storageSectionData.accept($0 ?? [MyStorageSectionData]())
                 
             })
             .disposed(by: self.disposeBag)
