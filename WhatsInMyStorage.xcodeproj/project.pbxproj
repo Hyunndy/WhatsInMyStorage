@@ -35,6 +35,7 @@
 		02C53F2029115DC900974031 /* Deleveloper_ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = 02C53F1F29115DC900974031 /* Deleveloper_ReadMe */; };
 		02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F2129115F8F00974031 /* UserSettingViewController.swift */; };
 		02C53F252911613400974031 /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F242911613400974031 /* PropertyWrapper.swift */; };
+		02D51186293232E300F3B997 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D51185293232E300F3B997 /* PopupViewController.swift */; };
 		7D0D271D87E4B365041121CF /* Pods_WhatsInMyStorage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F71AA309FA31E624901F322 /* Pods_WhatsInMyStorage.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		02C53F1F29115DC900974031 /* Deleveloper_ReadMe */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deleveloper_ReadMe; sourceTree = "<group>"; };
 		02C53F2129115F8F00974031 /* UserSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewController.swift; sourceTree = "<group>"; };
 		02C53F242911613400974031 /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
+		02D51185293232E300F3B997 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		633F9053CDFD8CEE9D1D27A8 /* Pods-WhatsInMyStorage.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhatsInMyStorage.debug.xcconfig"; path = "Target Support Files/Pods-WhatsInMyStorage/Pods-WhatsInMyStorage.debug.xcconfig"; sourceTree = "<group>"; };
 		7F71AA309FA31E624901F322 /* Pods_WhatsInMyStorage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhatsInMyStorage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AACA4092C3EC7BC2CB272E2 /* Pods-WhatsInMyStorage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhatsInMyStorage.release.xcconfig"; path = "Target Support Files/Pods-WhatsInMyStorage/Pods-WhatsInMyStorage.release.xcconfig"; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 		02C53F1829115B1900974031 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				02D511842932326400F3B997 /* Popup */,
 				02612DA0291E7E5600E9C36E /* Data */,
 				02612D9D291E7C5B00E9C36E /* Cell */,
 				0267DBEC2916951F00F257AD /* View */,
@@ -250,6 +253,14 @@
 				02C53F242911613400974031 /* PropertyWrapper.swift */,
 			);
 			path = PropertyWrapper;
+			sourceTree = "<group>";
+		};
+		02D511842932326400F3B997 /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				02D51185293232E300F3B997 /* PopupViewController.swift */,
+			);
+			path = Popup;
 			sourceTree = "<group>";
 		};
 		2BF392032F7FBDA13F4AA734 /* Pods */ = {
@@ -392,6 +403,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02D51186293232E300F3B997 /* PopupViewController.swift in Sources */,
 				024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */,
 				02612DA6291FBB2C00E9C36E /* MyStorageCellReactor.swift in Sources */,
 				02612D9F291E7C6B00E9C36E /* MyStorageCell.swift in Sources */,

@@ -51,7 +51,8 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         case 0:
             self.mainView.tableView.setEditing(!self.mainView.tableView.isEditing, animated: true)
         case 1:
-            print("오옹")
+
+                            self.present(PopupViewController(), animated: true)
         default:
             return
         }
@@ -112,11 +113,11 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
             .disposed(by: self.disposeBag)
         
         // + 버튼
-        self.addButton.rx
-            .tap
-            .map { Reactor.Action.insertStorage(self.rx.storageSectionData.value) }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
+//        self.addButton.rx
+//            .tap
+//            .map { Reactor.Action.insertStorage(self.rx.storageSectionData.value) }
+//            .bind(to: reactor.action)
+//            .disposed(by: self.disposeBag)
     }
 
     /// Reactor에서 State 받기
@@ -146,6 +147,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
                 
                 print("[StorageData]:: \($0?[0].items)")
                 
+
                 /// Relay는 Error 이벤트로 종료되지 않기 때문에 Observable을 Relay에 bind 시키는것은 지양하는게 좋다.
                 self.rx.storageSectionData.accept($0 ?? [MyStorageSectionData]())
                 
