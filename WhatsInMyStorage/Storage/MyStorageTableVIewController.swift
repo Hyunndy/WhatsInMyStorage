@@ -29,6 +29,12 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         var storageSectionData = BehaviorRelay<[MyStorageSectionData]>(value: [MyStorageSectionData(items: [StorageData]())])
     }
     
+    var currentSectionData: [MyStorageSectionData] {
+        get {
+            return self.rx.storageSectionData.value
+        }
+    }
+    
     let rx = Observable()
     
     var disposeBag = DisposeBag()
@@ -51,11 +57,26 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         case 0:
             self.mainView.tableView.setEditing(!self.mainView.tableView.isEditing, animated: true)
         case 1:
-
-                            self.present(PopupViewController(), animated: true)
+            openPopup()
         default:
             return
         }
+    }
+    
+    private func openPopup() {
+        
+        guard let reactor = self.reactor else { return }
+        
+        // 액션에 연결
+        let popupViewController = PopupViewController()
+        popupViewController.rx.addedStorageData
+            .map { addedStorageData in
+                Reactor.Action.newinsertStorage(self.currentSectionData, addedStorageData)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        self.present(popupViewController, animated: true)
     }
     
     override func loadView() {
@@ -111,13 +132,6 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
             .map { Reactor.Action.fetch }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
-        
-        // + 버튼
-//        self.addButton.rx
-//            .tap
-//            .map { Reactor.Action.insertStorage(self.rx.storageSectionData.value) }
-//            .bind(to: reactor.action)
-//            .disposed(by: self.disposeBag)
     }
 
     /// Reactor에서 State 받기

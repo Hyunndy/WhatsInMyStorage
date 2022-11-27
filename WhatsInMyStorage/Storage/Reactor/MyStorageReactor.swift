@@ -21,7 +21,7 @@ final class MyStorageReactor: Reactor {
     /// 작업에 대한 명칭
     enum Action {
         case fetch
-        case insertStorage([MyStorageSectionData])
+        case newinsertStorage([MyStorageSectionData], StorageData)
     }
     
     /// 실제 해야될 작업
@@ -50,7 +50,6 @@ final class MyStorageReactor: Reactor {
         switch action {
         case .fetch:
             return Observable.concat([
-                
                 // 1) 인디케이터 시작
                 Observable.just(Mutation.setIndicator(true)),
                 
@@ -62,11 +61,11 @@ final class MyStorageReactor: Reactor {
                 // 3) 인디케이터 멈춤
                 Observable.just(Mutation.setIndicator(false))
             ])
-        case let .insertStorage(currentStorage):
+        case let .newinsertStorage(currentStorage, addedStorage):
             return Observable.concat([
                 
                 // 1) 데이터 집어넣기
-                self.addStorageData(currentData: currentStorage)
+                self.addStorageData(currentData: currentStorage, addedData: addedStorage)
                     .map { Mutation.setStorageData($0) },
             ])
         }
@@ -102,13 +101,16 @@ final class MyStorageReactor: Reactor {
         return Observable.just(intialSectionData)
     }
     
-    private func addStorageData(currentData: [MyStorageSectionData]) -> Observable<[MyStorageSectionData]> {
+    private func addStorageData(currentData: [MyStorageSectionData], addedData: StorageData) -> Observable<[MyStorageSectionData]> {
         
         var convertedStorageData = currentData
-        
-        let addStorageData = [StorageData(product: "핫도그빵", quantity: 10)]
-        
-        convertedStorageData[0].items.append(contentsOf: addStorageData)
+        var storageData = convertedStorageData[0].items
+        // 이미 있는 데이터인지 찾기
+        if let idx = storageData.firstIndex(where: { return ($0 == addedData) }) {
+            convertedStorageData[0].items[idx] = addedData
+        } else {
+            convertedStorageData[0].items.append(addedData)
+        }
         
         return Observable.just(convertedStorageData)
     }
