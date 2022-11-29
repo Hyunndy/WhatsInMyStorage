@@ -12,6 +12,7 @@ import RxCocoa
 
 class popupView: UIView {
     
+    let contentView = UIView()
     let titleLabel = UILabel()
     let infoLabel = UILabel()
     let productTextField = UITextField()
@@ -22,9 +23,16 @@ class popupView: UIView {
     init() {
         super.init(frame: .zero)
         
-        self.backgroundColor = .white
+        self.backgroundColor = .white.withAlphaComponent(0.0)
         
-        self.addSubview(titleLabel)
+        self.addSubview(self.contentView)
+        _ = self.contentView.then {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 10.0
+            $0.backgroundColor = .white
+        }
+        
+        self.contentView.addSubview(titleLabel)
         _ = titleLabel.then {
             $0.text = "재고 추가"
             $0.font = .boldSystemFont(ofSize: 24.0)
@@ -32,14 +40,14 @@ class popupView: UIView {
             $0.textAlignment = .center
         }
         
-        self.addSubview(infoLabel)
+        self.contentView.addSubview(infoLabel)
         _ = infoLabel.then {
             $0.text = "Product Name"
             $0.font = .boldSystemFont(ofSize: 20.0)
             $0.textColor = UIColor.black
         }
         
-        self.addSubview(self.productTextField)
+        self.contentView.addSubview(self.productTextField)
         _ = self.productTextField.then {
             $0.font = .boldSystemFont(ofSize: 20.0)
             $0.textColor = UIColor.black
@@ -49,14 +57,14 @@ class popupView: UIView {
             $0.clipsToBounds = true
         }
         
-        self.addSubview(info2Label)
+        self.contentView.addSubview(info2Label)
         _ = info2Label.then {
             $0.text = "Quantity"
             $0.font = .boldSystemFont(ofSize: 20.0)
             $0.textColor = UIColor.black
         }
     
-        self.addSubview(self.quantityTextField)
+        self.contentView.addSubview(self.quantityTextField)
         _ = self.quantityTextField.then {
             $0.font = .boldSystemFont(ofSize: 20.0)
             $0.textColor = UIColor.black
@@ -67,7 +75,7 @@ class popupView: UIView {
             $0.clipsToBounds = true
         }
         
-        self.addSubview(self.confirmButton)
+        self.contentView.addSubview(self.confirmButton)
         _ = self.confirmButton.then {
             $0.setTitle("확인", for: .normal)
             $0.setTitleColor(.black, for: .normal)
@@ -77,6 +85,8 @@ class popupView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.contentView.pin.center().marginBottom(safeAreaInsets.top).width(70%).height(50%)
         
         self.titleLabel.pin.top(10.0).horizontally().sizeToFit(.width)
         self.infoLabel.pin.below(of: self.titleLabel).marginTop(30.0).horizontally(10.0).sizeToFit()
@@ -110,10 +120,7 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
     
     
     func setUI() {
-        self.view = popupView().then {
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 10.0
-        }
+        self.view = popupView()
         
         self.providesPresentationContextTransitionStyle = true
         self.definesPresentationContext = true
@@ -122,7 +129,7 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
     }
     
     func setLayout() {
-        self.mainView.pin.center().width(70%).height(50%)
+        self.mainView.pin.all()//.center().width(70%).height(50%)
     }
     
     func setRx() {
@@ -160,8 +167,13 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         
-        guard let touch = touches.first, self.mainView.bounds.contains(touch.location(in: self.mainView.confirmButton)) == false  else { return }
+        guard let touch = touches.first, self.mainView.bounds.contains(touch.location(in: self.mainView.contentView)) == false  else { return }
         
-        self.mainView.endEditing(true)
+        if self.mainView.productTextField.isEditing || self.mainView.quantityTextField.isEditing {
+            self.mainView.endEditing(true)
+        } else {
+            self.dismiss(animated: true)
+        }
+        
     }
 }

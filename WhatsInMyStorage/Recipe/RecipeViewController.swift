@@ -53,10 +53,10 @@ class RecipeViewController: UIViewController, ReactorViewControllerDelegate {
     }
     
     func bindAction(reactor: RecipeReactor) {
-        <#code#>
+        
     }
     
     func bindState(reactor: RecipeReactor) {
-        <#code#>
+        
     }
 }
