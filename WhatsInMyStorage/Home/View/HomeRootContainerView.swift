@@ -18,6 +18,7 @@ final class HomeRootContainerView: UIView {
     
     struct Observable {
         var tapStorageManage: ControlEvent<Void>?
+        var tapScheduleManage: ControlEvent<Void>?
     }
     
     var rx = Observable()
@@ -41,6 +42,9 @@ final class HomeRootContainerView: UIView {
     
     private func setRx() {
         self.rx.tapStorageManage = self.contentView.storageManageButton.rx.tap
+        self.rx.tapScheduleManage = self.contentView.scheduleButton.rx.tap
+        
+        
     }
     
     //@유현지 VC에서 View를 업데이트할 때 호출. 업데이트 쳐준 후 setNeedsLayout() 필요

@@ -87,6 +87,17 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
                 self.navigationController?.show(myStorageViewController, sender: nil)
             })
             .disposed(by: self.disposeBag)
+        
+        self.mainView.rx.tapScheduleManage?
+            .bind(onNext: { [weak self] in
+                guard let self else { return }
+                
+                let myStorageViewController = RecipeViewController()
+                myStorageViewController.hidesBottomBarWhenPushed = true
+            
+                self.navigationController?.show(myStorageViewController, sender: nil)
+            })
+            .disposed(by: self.disposeBag)
     }
 }
 

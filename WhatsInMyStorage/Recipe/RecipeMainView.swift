@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PinLayout
 
 class RecipeMainView: UIView {
 
@@ -31,7 +32,7 @@ class RecipeMainView: UIView {
             $0.backgroundColor = .white
             $0.dataSource = self
             $0.delegate = self
-            $0.register(RecipeCell.self, forCellWithReuseIdentifier: "RecipeCell")
+            $0.register(RecipeCell.self, forCellWithReuseIdentifier: RecipeCell.reuseIdentifier)
         }
     }
     
@@ -44,7 +45,7 @@ class RecipeMainView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.collectionView.pin.all(pin.safeArea)
+        self.collectionView.pin.all()
     }
     
     required init?(coder: NSCoder) {
@@ -54,8 +55,9 @@ class RecipeMainView: UIView {
 
 extension RecipeMainView: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecipeCell.reuseIdentifier, for: indexPath) as! RecipeCell
         
+        cell.configure(recipe: self.recipes[indexPath.row])
         return cell
     }
     
@@ -65,8 +67,10 @@ extension RecipeMainView: UICollectionViewDelegateFlowLayout, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+//        return CGSize(width: 200.0, height: 200.0)
+        cellTemplate.configure(recipe: self.recipes[indexPath.row])
         // cellTemplate로 configure
         
-        return self.cellTemplate.sizeThatFits(CGSize(width: collectionView.bounds.width, height: .greatestFiniteMagnitude))
+        return self.cellTemplate.sizeThatFits(CGSize(width: 200.0, height: 200.0))
     }
 }
