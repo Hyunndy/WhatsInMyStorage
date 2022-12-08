@@ -40,7 +40,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     var disposeBag = DisposeBag()
     
     lazy var editButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(navigationBarButtonTapped(_:)))
+        let button = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: nil)
         button.tag = 0
         return button
     }()
@@ -54,8 +54,6 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     @objc func navigationBarButtonTapped(_ sender: UIBarButtonItem) {
         
         switch sender.tag {
-        case 0:
-            self.mainView.tableView.setEditing(!self.mainView.tableView.isEditing, animated: true)
         case 1:
             openPopup()
         default:
@@ -132,6 +130,12 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
             .map { Reactor.Action.fetch }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
+        
+        // editing 버튼
+        self.editButton.rx.tap
+            .map { Reactor.Action.editing(!self.mainView.tableView.isEditing)}
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
 
     /// Reactor에서 State 받기
@@ -165,6 +169,16 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
                 /// Relay는 Error 이벤트로 종료되지 않기 때문에 Observable을 Relay에 bind 시키는것은 지양하는게 좋다.
                 self.rx.storageSectionData.accept($0 ?? [MyStorageSectionData]())
                 
+            })
+            .disposed(by: self.disposeBag)
+        
+        // Editing
+        reactor
+            .skipInitPulse(\.$isEditing)
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                
+                self.mainView.tableView.setEditing($0, animated: true)
             })
             .disposed(by: self.disposeBag)
     }

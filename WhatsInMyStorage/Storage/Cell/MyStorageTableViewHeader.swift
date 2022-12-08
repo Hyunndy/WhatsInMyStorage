@@ -44,7 +44,9 @@ class MyStorageTableViewHeader: UITableViewHeaderFooterView {
         super.layoutSubviews()
         
         self.titleLabel.pin.vCenter().left(24.0).sizeToFit()
-        self.quantityLabel.pin.vCenter().right((24.0 + 30.0 + 12.0 + 50.0 + 12.0 + 30.0) / 2.0).sizeToFit()
+//        self.quantityLabel.pin.vCenter().right((24.0 + 30.0 + 12.0 + 50.0 + 12.0 + 30.0) / 2.0).sizeToFit()
+        self.quantityLabel.pin.vCenter().right((24.0 + 30.0 + 50.0) / 2.0).sizeToFit()
+//        self.quantityLabel.pin.vCenter().right(24.0).sizeToFit()
     }
     
     required init?(coder: NSCoder) {

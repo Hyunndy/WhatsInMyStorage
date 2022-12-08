@@ -41,7 +41,11 @@ class MyStorageTableView: UIView {
             $0.backgroundColor = .white
             $0.estimatedRowHeight = 56.0
             $0.rowHeight = UITableView.automaticDimension
-            $0.register(MyStorageTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MyStorageTableViewHeader.reuseIdentifier)
+            
+            let header = MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 45.0))
+            $0.tableHeaderView = header
+            
+//            $0.register(MyStorageTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MyStorageTableViewHeader.reuseIdentifier)
             $0.register(MyStorageCell.self, forCellReuseIdentifier: "MyStorageCell")
         }
         
@@ -58,6 +62,8 @@ class MyStorageTableView: UIView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
             cell.configure(storage: item)
             cell.reactor = MyStorageCellReactor(quantity: item.quantity)
+
+//            cell.isEditing = tableView.isEditing
             
             cell.rx.changeQuantity
                 .subscribe(onNext: { [weak self] in
@@ -81,6 +87,11 @@ class MyStorageTableView: UIView {
         self.dataSource
             .canEditRowAtIndexPath = { (_, _) in
                 return true
+            }
+        
+        self.dataSource
+            .titleForHeaderInSection = { (_, _) in
+                return "핫도그 재료"
             }
         
         self.dataSource
@@ -176,17 +187,17 @@ extension MyStorageTableView: UITableViewDelegate {
         
         let data = self.rx.storageSectionData.value[0]
         if data.items.count > 0 {
-            return 45.0
+            return 10.0
         } else {
             return 0.0
         }
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableViewHeader.reuseIdentifier) as! MyStorageTableViewHeader
-
-        return header
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableViewHeader.reuseIdentifier) as! MyStorageTableViewHeader
+//
+//        return header
+//    }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 

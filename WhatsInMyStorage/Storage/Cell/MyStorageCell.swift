@@ -70,6 +70,7 @@ class MyStorageCell: UITableViewCell {
             $0.backgroundColor = UIColor.wms.gray
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
+            $0.isHidden = true
 //            $0.layer.borderWidth = 0.1
 //            $0.layer.borderColor = UIColor.black.cgColor
         }
@@ -89,6 +90,7 @@ class MyStorageCell: UITableViewCell {
             $0.backgroundColor = UIColor.wms.gray
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
+            $0.isHidden = true
 //            $0.layer.borderWidth = 0.1
 //            $0.layer.borderColor = UIColor.black.cgColor
         }
@@ -120,6 +122,13 @@ class MyStorageCell: UITableViewCell {
         layout()
 
         return CGSize(width: contentView.frame.width, height: 60.0)
+    }
+    
+    override func willTransition(to state: UITableViewCell.StateMask) {
+        super.willTransition(to: state)
+        
+        self.minusButton.isHidden = (state.rawValue == 0)
+        self.plusButton.isHidden = (state.rawValue == 0)
     }
     
     required init?(coder: NSCoder) {

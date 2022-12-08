@@ -22,12 +22,14 @@ final class MyStorageReactor: Reactor {
     enum Action {
         case fetch
         case newinsertStorage([MyStorageSectionData], StorageData)
+        case editing(Bool)
     }
     
     /// 실제 해야될 작업
     enum Mutation {
         case setIndicator(Bool)
         case setStorageData([MyStorageSectionData])
+        case setEditing(Bool)
 //        case appendStorageData([StorageData], nextPage: Int?)
     }
     
@@ -35,6 +37,7 @@ final class MyStorageReactor: Reactor {
     struct State {
         @Pulse var isPlayIndicator: Bool?
         @Pulse var storageData: [MyStorageSectionData]?
+        @Pulse var isEditing: Bool = false
 //        var nextPage: Int?
     }
     
@@ -68,6 +71,10 @@ final class MyStorageReactor: Reactor {
                 self.addStorageData(currentData: currentStorage, addedData: addedStorage)
                     .map { Mutation.setStorageData($0) },
             ])
+        case .editing(let isEditing):
+            return Observable.concat([
+                Observable.just(Mutation.setEditing(isEditing))
+            ])
         }
     }
     
@@ -80,6 +87,9 @@ final class MyStorageReactor: Reactor {
             return newState
         case .setStorageData(let data):
             newState.storageData = data
+            return newState
+        case .setEditing(let isEditing):
+            newState.isEditing = isEditing
             return newState
 //            newState.nextPage = 2
 //        case .appendStorageData(let data, let nextPage):
