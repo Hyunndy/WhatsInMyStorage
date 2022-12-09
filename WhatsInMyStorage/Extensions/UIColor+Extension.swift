@@ -22,7 +22,7 @@ extension Reactor {
     /// VC를 push해준 후에 Reactor를 세팅해서 UI가 로드된 후 reactor를 binding시켜도 되지만, 이거 쓰는게 더 나을듯 하다.
     public func skipInitPulse<Result>(_ transformToPulse: @escaping (State) throws -> Pulse<Result>) -> Observable<Result> {
         return self.state
-            .skip(1)
             .map(transformToPulse).distinctUntilChanged(\.valueUpdatedCount).map(\.value)
+            .skip(1)
     }
 }

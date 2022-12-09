@@ -23,6 +23,7 @@ final class MyStorageReactor: Reactor {
         case fetch
         case newinsertStorage([MyStorageSectionData], StorageData)
         case editing(Bool)
+        case add
     }
     
     /// 실제 해야될 작업
@@ -30,6 +31,7 @@ final class MyStorageReactor: Reactor {
         case setIndicator(Bool)
         case setStorageData([MyStorageSectionData])
         case setEditing(Bool)
+        case openPopup
 //        case appendStorageData([StorageData], nextPage: Int?)
     }
     
@@ -38,14 +40,14 @@ final class MyStorageReactor: Reactor {
         @Pulse var isPlayIndicator: Bool?
         @Pulse var storageData: [MyStorageSectionData]?
         @Pulse var isEditing: Bool = false
-//        var nextPage: Int?
+        @Pulse var openPopup: Void = ()
     }
     
     var initialState: State
     
     init() {
         self.initialState = State(isPlayIndicator: false, storageData: nil)
-        _ = self.state // add this line to create a state immediately
+//        _ = self.state // add this line to create a state immediately
     }
     
     /// Action -> Mutation
@@ -75,6 +77,10 @@ final class MyStorageReactor: Reactor {
             return Observable.concat([
                 Observable.just(Mutation.setEditing(isEditing))
             ])
+        case .add:
+            return Observable.concat([
+                Observable.just(Mutation.openPopup)
+            ])
         }
     }
     
@@ -91,10 +97,9 @@ final class MyStorageReactor: Reactor {
         case .setEditing(let isEditing):
             newState.isEditing = isEditing
             return newState
-//            newState.nextPage = 2
-//        case .appendStorageData(let data, let nextPage):
-//            newState.storageData?.append(data)
-//            newState =
+        case .openPopup:
+            newState.openPopup = ()
+            return newState
         }
     }
     

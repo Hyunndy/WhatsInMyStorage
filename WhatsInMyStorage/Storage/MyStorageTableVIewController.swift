@@ -46,20 +46,10 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
     }()
     
     lazy var addButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(navigationBarButtonTapped(_:)))
+        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
         button.tag = 1
         return button
     }()
-    
-    @objc func navigationBarButtonTapped(_ sender: UIBarButtonItem) {
-        
-        switch sender.tag {
-        case 1:
-            openPopup()
-        default:
-            return
-        }
-    }
     
     private func openPopup() {
         
@@ -136,6 +126,12 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
             .map { Reactor.Action.editing(!self.mainView.tableView.isEditing)}
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
+        
+        // + 버튼
+        self.addButton.rx.tap
+            .map { Reactor.Action.add }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
 
     /// Reactor에서 State 받기
@@ -165,7 +161,6 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
                 
                 print("[StorageData]:: \($0?[0].items)")
                 
-
                 /// Relay는 Error 이벤트로 종료되지 않기 때문에 Observable을 Relay에 bind 시키는것은 지양하는게 좋다.
                 self.rx.storageSectionData.accept($0 ?? [MyStorageSectionData]())
                 
@@ -179,6 +174,16 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
                 guard let self else { return }
                 
                 self.mainView.tableView.setEditing($0, animated: true)
+            })
+            .disposed(by: self.disposeBag)
+        
+        // + 버튼
+        reactor
+            .skipInitPulse(\.$openPopup)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+                
+                self.openPopup()
             })
             .disposed(by: self.disposeBag)
     }
