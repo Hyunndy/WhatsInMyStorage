@@ -6,18 +6,21 @@
 //
 
 import UIKit
+import RxSwift
 
 class MyStorageTableSectionHeaderView: UITableViewHeaderFooterView {
 
     static let reuseIdentifier = "MyStorageTableSectionHeader"
     
-    private let titleLabel = UILabel()
+    let titleButton = UIButton()
     
     var title: String? {
         didSet {
-            self.titleLabel.text = title
+            self.titleButton.setTitle(title, for: .normal)
         }
     }
+    
+    var disposeBag = DisposeBag()
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -25,20 +28,27 @@ class MyStorageTableSectionHeaderView: UITableViewHeaderFooterView {
         self.setUI()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.disposeBag = DisposeBag()
+    }
+    
     private func setUI() {
         
-        self.contentView.addSubview(self.titleLabel)
-        _ = self.titleLabel.then {
-            $0.textColor = UIColor.wms.blue
-            $0.textAlignment = .left
-            $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+        self.contentView.addSubview(self.titleButton)
+        _ = self.titleButton.then {
+            $0.setTitleColor(.wms.blue, for: .normal)
+            $0.titleLabel?.textAlignment = .left
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 20.0)
+            $0.backgroundColor = .yellow
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.titleLabel.pin.vCenter().left(24.0).sizeToFit()
+        self.titleButton.pin.all()
     }
     
     required init?(coder: NSCoder) {

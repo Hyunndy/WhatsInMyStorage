@@ -33,6 +33,8 @@ class MyStorageCell: UITableViewCell {
         let changeQuantity = PublishRelay<Int>()
     }
     
+    var isExpandable: Bool = false
+    
     let rx = Observable()
     
     var disposeBag = DisposeBag()
@@ -108,6 +110,7 @@ class MyStorageCell: UITableViewCell {
     }
     
     private func layout() {
+        guard self.isExpandable == false else { return }
         
         self.productLabel.pin.vCenter().left(24.0).sizeToFit()
         self.plusButton.pin.vCenter().right(24.0).size(CGSize(width: 30.0, height: 30.0))
@@ -117,11 +120,16 @@ class MyStorageCell: UITableViewCell {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
 
-        self.contentView.pin.width(size.width)
+        if self.isExpandable == true {
+            return .zero
+        } else {
+            self.contentView.pin.width(size.width)
 
-        layout()
+            layout()
 
-        return CGSize(width: contentView.frame.width, height: 60.0)
+            return CGSize(width: contentView.frame.width, height: 60.0)
+        }
+        
     }
     
     override func willTransition(to state: UITableViewCell.StateMask) {

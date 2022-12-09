@@ -28,6 +28,8 @@ class MyStorageTableView: UIView {
     
     let disposeBag = DisposeBag()
     
+    var expandableSet = Set<Int>()
+    
     let tableView = UITableView(frame: .zero, style: .grouped)
     var indicatorView: LottieAnimationView!
     
@@ -40,9 +42,10 @@ class MyStorageTableView: UIView {
             $0.separatorInset = .zero
             $0.backgroundColor = .white
             $0.estimatedRowHeight = 56.0
-            $0.rowHeight = UITableView.automaticDimension
+//            $0.rowHeight = UITableView.automaticDimension
             
             let header = MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 45.0))
+
             $0.tableHeaderView = header
             
             $0.register(MyStorageTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier)
@@ -60,10 +63,11 @@ class MyStorageTableView: UIView {
         // CollectionView.DataSource 세팅
         self.dataSource = RxTableViewSectionedReloadDataSource<MyStorageSectionData> { dataSource, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
+            
+            cell.isExpandable = self.expandableSet.contains(indexPath.section)
+            
             cell.configure(storage: item)
             cell.reactor = MyStorageCellReactor(quantity: item.quantity)
-
-//            cell.isEditing = tableView.isEditing
             
             cell.rx.changeQuantity
                 .subscribe(onNext: { [weak self] in
@@ -85,20 +89,20 @@ class MyStorageTableView: UIView {
             .disposed(by: self.disposeBag)
         
         self.dataSource
-            .canEditRowAtIndexPath = { (_, _) in
-                return true
+            .canEditRowAtIndexPath = { (_, indexPath) in
+                
+                if self.expandableSet.contains(indexPath.section) == true {
+                    return false
+                } else {
+                    return true
+                }
             }
-        
-//        self.dataSource
-//            .titleForHeaderInSection = { (datasource, index) in
-//                return datasource.sectionModels[index].header
-//            }
         
         self.dataSource
             .canMoveRowAtIndexPath = { (_, _) in
                 return true
             }
-        
+
         self.tableView.rx.itemMoved
             .observe(on: MainScheduler.asyncInstance)
             .withUnretained(self)
@@ -176,11 +180,33 @@ class MyStorageTableView: UIView {
 }
 
 extension MyStorageTableView: UITableViewDelegate {
-
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        print(indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if self.expandableSet.contains(indexPath.section) {
+            return 0.0
+        } else {
+            // The UITableView will call the cell's sizeThatFit() method to compute the height.
+            // WANRING: You must also set the UITableView.estimatedRowHeight for this to work.
+            return UITableView.automaticDimension
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // The UITableView will call the cell's sizeThatFit() method to compute the height.
-        // WANRING: You must also set the UITableView.estimatedRowHeight for this to work.
-        return UITableView.automaticDimension
+        
+        if self.expandableSet.contains(indexPath.section) {
+            return 0.0
+        } else {
+            // The UITableView will call the cell's sizeThatFit() method to compute the height.
+            // WANRING: You must also set the UITableView.estimatedRowHeight for this to work.
+            return UITableView.automaticDimension
+        }
+        
+       
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -197,6 +223,21 @@ extension MyStorageTableView: UITableViewDelegate {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier) as! MyStorageTableSectionHeaderView
 
         header.title = self.rx.storageSectionData.value[section].header
+        header.titleButton.rx.tap
+            .bind(onNext: { [weak self] in
+                guard let self else { return }
+                
+                if self.expandableSet.contains(section) {
+                    self.expandableSet.remove(section)
+                } else {
+                    self.expandableSet.insert(section)
+                }
+                
+                
+                self.tableView.reloadSections([section], animationStyle: .automatic)
+                
+                
+            }).disposed(by: header.disposeBag)
         
         return header
     }

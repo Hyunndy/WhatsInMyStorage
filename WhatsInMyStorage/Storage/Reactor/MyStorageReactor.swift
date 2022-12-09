@@ -111,7 +111,7 @@ final class MyStorageReactor: Reactor {
                            StorageData(product: "토마토", quantity: 3),
                            StorageData(product: "소세지", quantity: 4)]
          
-        var intialSectionData = [MyStorageSectionData(header: "핫도그",items: storageData)]
+        let intialSectionData = [MyStorageSectionData(header: "핫도그",items: storageData)]
         
         return Observable.just(intialSectionData)
     }
@@ -122,7 +122,14 @@ final class MyStorageReactor: Reactor {
         
         // 현재 있는 섹션인지 찾기
         if let idx = currentData.firstIndex(where: { $0.header == addedData.header }) {
-            convertedStorageData[idx].items += addedData.items
+            
+            // 있는 아이템인지도 찾기
+            if let itemIdx = convertedStorageData[idx].items.firstIndex(where: { $0.product == addedData.items[0].product }) {
+                convertedStorageData[idx].items[itemIdx].quantity += addedData.items[0].quantity
+            } else {
+                convertedStorageData[idx].items += addedData.items
+            }
+            
         } else {
             convertedStorageData.append(addedData)
         }
