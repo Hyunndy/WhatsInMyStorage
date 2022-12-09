@@ -14,6 +14,10 @@ class popupView: UIView {
     
     let contentView = UIView()
     let titleLabel = UILabel()
+    
+    let sectionLabel = UILabel()
+    let sectionTextField = UITextField()
+    
     let infoLabel = UILabel()
     let productTextField = UITextField()
     let info2Label = UILabel()
@@ -38,6 +42,23 @@ class popupView: UIView {
             $0.font = .boldSystemFont(ofSize: 24.0)
             $0.textColor = UIColor.black
             $0.textAlignment = .center
+        }
+        
+        self.contentView.addSubview(sectionLabel)
+        _ = sectionLabel.then {
+            $0.text = "Section Name"
+            $0.font = .boldSystemFont(ofSize: 20.0)
+            $0.textColor = UIColor.black
+        }
+        
+        self.contentView.addSubview(sectionTextField)
+        _ = sectionTextField.then {
+            $0.font = .boldSystemFont(ofSize: 20.0)
+            $0.textColor = UIColor.black
+            $0.placeholder = "섹션을 입력하세요."
+            $0.layer.borderColor = UIColor.wms.gray.cgColor
+            $0.layer.borderWidth = 1.0
+            $0.clipsToBounds = true
         }
         
         self.contentView.addSubview(infoLabel)
@@ -86,10 +107,14 @@ class popupView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.contentView.pin.center().marginBottom(safeAreaInsets.top).width(70%).height(50%)
+        self.contentView.pin.center().marginBottom(safeAreaInsets.top).width(70%).height(70%)
         
         self.titleLabel.pin.top(10.0).horizontally().sizeToFit(.width)
-        self.infoLabel.pin.below(of: self.titleLabel).marginTop(30.0).horizontally(10.0).sizeToFit()
+        
+        self.sectionLabel.pin.below(of: self.titleLabel).marginTop(30.0).horizontally(10.0).sizeToFit()
+        self.sectionTextField.pin.below(of: self.sectionLabel, aligned: .left).marginTop(10.0).horizontally(10.0).height(40.0)
+        
+        self.infoLabel.pin.below(of: self.sectionTextField).marginTop(10.0).horizontally(10.0).sizeToFit()
         self.productTextField.pin.below(of: self.infoLabel, aligned: .left).marginTop(10.0).horizontally(10.0).height(40.0)
         self.info2Label.pin.below(of: self.productTextField, aligned: .left).marginTop(10.0).horizontally().sizeToFit()
         self.quantityTextField.pin.below(of: self.info2Label, aligned: .left).marginTop(10.0).horizontally(10.0).height(40.0)
@@ -113,7 +138,7 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
     let disposeBag = DisposeBag()
     
     struct Observable {
-        let addedStorageData = PublishRelay<StorageData>()
+        let addedStorageData = PublishRelay<MyStorageSectionData>()
     }
     
     let rx = Observable()
@@ -138,9 +163,10 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
                 guard let self else { return }
                 
                 self.dismiss(animated: true, completion: { [weak self] in
-                    guard let self, let product = self.mainView.productTextField.text, let quantityString = self.mainView.quantityTextField.text, let quantity = Int(quantityString) else { return }
+                    guard let self, let header = self.mainView.sectionTextField.text, let product = self.mainView.productTextField.text, let quantityString = self.mainView.quantityTextField.text, let quantity = Int(quantityString) else { return }
                     
-                    self.rx.addedStorageData.accept(StorageData(product: product, quantity: quantity))
+                    let item = StorageData(product: product, quantity: quantity)
+                    self.rx.addedStorageData.accept(MyStorageSectionData(header: header, items: [item]))
                 })
             })
             .disposed(by: self.disposeBag)
@@ -169,11 +195,10 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
         
         guard let touch = touches.first, self.mainView.bounds.contains(touch.location(in: self.mainView.contentView)) == false  else { return }
         
-        if self.mainView.productTextField.isEditing || self.mainView.quantityTextField.isEditing {
+        if self.mainView.sectionTextField.isEditing || self.mainView.productTextField.isEditing || self.mainView.quantityTextField.isEditing {
             self.mainView.endEditing(true)
         } else {
             self.dismiss(animated: true)
         }
-        
     }
 }

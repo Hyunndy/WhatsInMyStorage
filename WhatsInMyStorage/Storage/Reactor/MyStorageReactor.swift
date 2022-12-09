@@ -21,7 +21,7 @@ final class MyStorageReactor: Reactor {
     /// 작업에 대한 명칭
     enum Action {
         case fetch
-        case newinsertStorage([MyStorageSectionData], StorageData)
+        case newinsertStorage([MyStorageSectionData], MyStorageSectionData)
         case editing(Bool)
         case add
     }
@@ -116,15 +116,15 @@ final class MyStorageReactor: Reactor {
         return Observable.just(intialSectionData)
     }
     
-    private func addStorageData(currentData: [MyStorageSectionData], addedData: StorageData) -> Observable<[MyStorageSectionData]> {
+    private func addStorageData(currentData: [MyStorageSectionData], addedData: MyStorageSectionData) -> Observable<[MyStorageSectionData]> {
         
         var convertedStorageData = currentData
-        var storageData = convertedStorageData[0].items
-        // 이미 있는 데이터인지 찾기
-        if let idx = storageData.firstIndex(where: { return ($0 == addedData) }) {
-            convertedStorageData[0].items[idx] = addedData
+        
+        // 현재 있는 섹션인지 찾기
+        if let idx = currentData.firstIndex(where: { $0.header == addedData.header }) {
+            convertedStorageData[idx].items += addedData.items
         } else {
-            convertedStorageData[0].items.append(addedData)
+            convertedStorageData.append(addedData)
         }
         
         return Observable.just(convertedStorageData)
