@@ -3,6 +3,7 @@
 import RxDataSources
 
 struct MyStorageSectionData {
+    var header: String?
     var items: [Item]
 }
 

@@ -8,22 +8,20 @@
 import Foundation
 import UIKit
 
-class MyStorageTableViewHeader: UITableViewHeaderFooterView {
-    
-    static let reuseIdentifier = "MyStorageTableHeader"
+class MyStorageTableViewHeader: UIView {
     
     private let titleLabel = UILabel()
     private let quantityLabel = UILabel()
 
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         self.setUI()
     }
     
     private func setUI() {
         
-        self.contentView.addSubview(self.titleLabel)
+        self.addSubview(self.titleLabel)
         _ = self.titleLabel.then {
             $0.text = "Product"
             $0.textColor = UIColor.wms.blue
@@ -31,7 +29,7 @@ class MyStorageTableViewHeader: UITableViewHeaderFooterView {
             $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
         }
         
-        self.contentView.addSubview(self.quantityLabel)
+        self.addSubview(self.quantityLabel)
         _ = self.quantityLabel.then {
             $0.text = "Quantity"
             $0.textColor = UIColor.wms.blue

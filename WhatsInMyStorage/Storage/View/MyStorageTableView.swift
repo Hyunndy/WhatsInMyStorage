@@ -45,7 +45,7 @@ class MyStorageTableView: UIView {
             let header = MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 45.0))
             $0.tableHeaderView = header
             
-//            $0.register(MyStorageTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MyStorageTableViewHeader.reuseIdentifier)
+            $0.register(MyStorageTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier)
             $0.register(MyStorageCell.self, forCellReuseIdentifier: "MyStorageCell")
         }
         
@@ -89,10 +89,10 @@ class MyStorageTableView: UIView {
                 return true
             }
         
-        self.dataSource
-            .titleForHeaderInSection = { (_, _) in
-                return "핫도그 재료"
-            }
+//        self.dataSource
+//            .titleForHeaderInSection = { (datasource, index) in
+//                return datasource.sectionModels[index].header
+//            }
         
         self.dataSource
             .canMoveRowAtIndexPath = { (_, _) in
@@ -187,17 +187,19 @@ extension MyStorageTableView: UITableViewDelegate {
         
         let data = self.rx.storageSectionData.value[0]
         if data.items.count > 0 {
-            return 10.0
+            return 50.0
         } else {
             return 0.0
         }
     }
 
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableViewHeader.reuseIdentifier) as! MyStorageTableViewHeader
-//
-//        return header
-//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier) as! MyStorageTableSectionHeaderView
+
+        header.title = self.rx.storageSectionData.value[section].header
+        
+        return header
+    }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 

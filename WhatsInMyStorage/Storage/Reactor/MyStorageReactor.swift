@@ -106,7 +106,7 @@ final class MyStorageReactor: Reactor {
                            StorageData(product: "토마토", quantity: 3),
                            StorageData(product: "소세지", quantity: 4)]
          
-        var intialSectionData = [MyStorageSectionData(items: storageData)]
+        var intialSectionData = [MyStorageSectionData(header: "핫도그",items: storageData)]
         
         return Observable.just(intialSectionData)
     }
