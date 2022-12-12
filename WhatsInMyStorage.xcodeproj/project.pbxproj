@@ -11,6 +11,10 @@
 		0206575A293514D60035FC2D /* RecipeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02065759293514D60035FC2D /* RecipeMainView.swift */; };
 		0206575C2935152D0035FC2D /* RecipeReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0206575B2935152D0035FC2D /* RecipeReactor.swift */; };
 		0206575E293519B40035FC2D /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0206575D293519B40035FC2D /* RecipeCell.swift */; };
+		024618B42947894B001E2096 /* Refac_MyStorageManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024618B32947894B001E2096 /* Refac_MyStorageManageViewController.swift */; };
+		024618B6294789EB001E2096 /* Refac_MyStorageManageReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024618B5294789EB001E2096 /* Refac_MyStorageManageReactor.swift */; };
+		024618B829479A09001E2096 /* Refac_MyStorageCellReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024618B729479A09001E2096 /* Refac_MyStorageCellReactor.swift */; };
+		024618BA29479CD0001E2096 /* Refac_MyStorageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024618B929479CD0001E2096 /* Refac_MyStorageCell.swift */; };
 		024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */; };
 		024B3E682923B24500D79A04 /* ReactorKitPracticeReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */; };
 		02612D9A291E7A8300E9C36E /* MyStorageTableVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612D99291E7A8300E9C36E /* MyStorageTableVIewController.swift */; };
@@ -49,6 +53,10 @@
 		02065759293514D60035FC2D /* RecipeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeMainView.swift; sourceTree = "<group>"; };
 		0206575B2935152D0035FC2D /* RecipeReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeReactor.swift; sourceTree = "<group>"; };
 		0206575D293519B40035FC2D /* RecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
+		024618B32947894B001E2096 /* Refac_MyStorageManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refac_MyStorageManageViewController.swift; sourceTree = "<group>"; };
+		024618B5294789EB001E2096 /* Refac_MyStorageManageReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refac_MyStorageManageReactor.swift; sourceTree = "<group>"; };
+		024618B729479A09001E2096 /* Refac_MyStorageCellReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refac_MyStorageCellReactor.swift; sourceTree = "<group>"; };
+		024618B929479CD0001E2096 /* Refac_MyStorageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refac_MyStorageCell.swift; sourceTree = "<group>"; };
 		024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeViewController.swift; sourceTree = "<group>"; };
 		024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeReactor.swift; sourceTree = "<group>"; };
 		02612D99291E7A8300E9C36E /* MyStorageTableVIewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageTableVIewController.swift; sourceTree = "<group>"; };
@@ -249,6 +257,10 @@
 				0267DBEC2916951F00F257AD /* View */,
 				02A38A3A291413DC00B02951 /* Reactor */,
 				02612D99291E7A8300E9C36E /* MyStorageTableVIewController.swift */,
+				024618B32947894B001E2096 /* Refac_MyStorageManageViewController.swift */,
+				024618B5294789EB001E2096 /* Refac_MyStorageManageReactor.swift */,
+				024618B729479A09001E2096 /* Refac_MyStorageCellReactor.swift */,
+				024618B929479CD0001E2096 /* Refac_MyStorageCell.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -433,6 +445,7 @@
 				024B3E682923B24500D79A04 /* ReactorKitPracticeReactor.swift in Sources */,
 				0267DBE9291681B200F257AD /* ContentService.swift in Sources */,
 				02612DA4291FAC5300E9C36E /* MyStorageTableViewHeader.swift in Sources */,
+				024618BA29479CD0001E2096 /* Refac_MyStorageCell.swift in Sources */,
 				02B9F79F290ED416005973AE /* ViewController.swift in Sources */,
 				02C53F252911613400974031 /* PropertyWrapper.swift in Sources */,
 				0206575A293514D60035FC2D /* RecipeMainView.swift in Sources */,
@@ -447,11 +460,14 @@
 				02AC31E529438887003D1543 /* MyStorageTableSectionHeaderView.swift in Sources */,
 				02612D9A291E7A8300E9C36E /* MyStorageTableVIewController.swift in Sources */,
 				0267DBE7291680A800F257AD /* AutoSizingView.swift in Sources */,
+				024618B6294789EB001E2096 /* Refac_MyStorageManageReactor.swift in Sources */,
+				024618B42947894B001E2096 /* Refac_MyStorageManageViewController.swift in Sources */,
 				02C34458292BDECF0055A6D6 /* MyStorageSection.swift in Sources */,
 				02C34452292A4D5D0055A6D6 /* UIColor+Extension.swift in Sources */,
 				02065758293514A50035FC2D /* RecipeViewController.swift in Sources */,
 				02612D9C291E7C3000E9C36E /* MyStorageTableView.swift in Sources */,
 				02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */,
+				024618B829479A09001E2096 /* Refac_MyStorageCellReactor.swift in Sources */,
 				0267DBF62917F2C600F257AD /* HomeRootContainerView.swift in Sources */,
 				02B9F79D290ED416005973AE /* SceneDelegate.swift in Sources */,
 				0206575E293519B40035FC2D /* RecipeCell.swift in Sources */,
