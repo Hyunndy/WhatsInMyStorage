@@ -30,8 +30,10 @@ class MyStorageTableView: UIView {
     
     var expandableSet = Set<Int>()
     
-    let tableView = UITableView(frame: .zero, style: .grouped)
+    let tableView = UITableView(frame: .zero, style: .plain)
     var indicatorView: LottieAnimationView!
+    
+    let confirmButton = UIButton()
     
     var dataSource: RxTableViewSectionedReloadDataSource<MyStorageSectionData>!
     
@@ -42,10 +44,12 @@ class MyStorageTableView: UIView {
             $0.separatorInset = .zero
             $0.backgroundColor = .white
             $0.estimatedRowHeight = 56.0
-//            $0.rowHeight = UITableView.automaticDimension
+            if #available(iOS 15.0, *) {
+                $0.sectionHeaderTopPadding = 0.0
+            }
+            $0.automaticallyAdjustsScrollIndicatorInsets = false
             
             let header = MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 45.0))
-
             $0.tableHeaderView = header
             
             $0.register(MyStorageTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier)
@@ -56,6 +60,14 @@ class MyStorageTableView: UIView {
             $0.contentMode = .scaleAspectFit
         }
         self.addSubview(self.indicatorView)
+        
+        self.addSubview(self.confirmButton)
+        _ = self.confirmButton.then {
+            $0.backgroundColor = UIColor.wms.green
+            $0.setTitle("저장하기", for: .normal)
+            $0.layer.cornerRadius = 5.0
+            $0.clipsToBounds = true
+        }
     }
     
     func setRx() {
@@ -103,7 +115,7 @@ class MyStorageTableView: UIView {
             }
         
         self.dataSource
-            .canMoveRowAtIndexPath = { (_, _) in
+            .canMoveRowAtIndexPath = { (a, _) in
                 return true
             }
 
@@ -118,13 +130,12 @@ class MyStorageTableView: UIView {
                 
                 var sectionDataArray = self.rx.storageSectionData.value
                 
-                var currentSection = sectionDataArray[sourceIndexPath.section]
+                let swapData: StorageData = sectionDataArray[sourceIndexPath.section].items[sourceIndexPath.item]
                 
-                currentSection.items.swapAt(sourceIndexPath.row, destinationIndexPath.row)
+                sectionDataArray[sourceIndexPath.section].items.remove(at: sourceIndexPath.item)
                 
-                // 섹션 업데이트!
-                sectionDataArray[sourceIndexPath.section] = currentSection
-                
+                sectionDataArray[destinationIndexPath.section].items.insert(swapData, at: destinationIndexPath.item)
+            
                 // 최종 데이터 업데이트
                 self.rx.storageSectionData.accept(sectionDataArray)
             }
@@ -170,6 +181,7 @@ class MyStorageTableView: UIView {
     private func layout() {
         self.indicatorView.pin.center().sizeToFit()
         self.tableView.pin.all()
+        self.confirmButton.pin.bottomCenter(to: self.tableView.anchor.bottomCenter).marginBottom(10.0).minWidth(self.tableView.frame.width - 50.0).height(56.0)
     }
     
     override func layoutSubviews() {
@@ -215,12 +227,16 @@ extension MyStorageTableView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        let data = self.rx.storageSectionData.value[0]
+        let data = self.rx.storageSectionData.value[section]
         if data.items.count > 0 {
             return 50.0
         } else {
             return 0.0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .zero
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -246,6 +262,5 @@ extension MyStorageTableView: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-
     }
 }

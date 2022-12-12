@@ -13,6 +13,7 @@ extension UIColor {
     struct wms {
         static let gray = UIColor(red: 0.961, green: 0.965, blue: 0.984, alpha: 1)
         static let blue = UIColor(red: 0.294, green: 0.478, blue: 1, alpha: 1)
+        static let green = UIColor(red: 0.1922, green: 0.4745, blue: 0.3451, alpha: 1.0)
     }
 }
 

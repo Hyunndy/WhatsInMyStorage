@@ -119,7 +119,7 @@ class MyStorageCell: UITableViewCell {
         } else {
             self.productLabel.pin.vCenter().left(24.0).sizeToFit()
             self.plusButton.pin.vCenter().right(24.0).size(CGSize(width: 30.0, height: 30.0))
-            self.quantityLabel.pin.before(of: self.plusButton, aligned: .center).margin(12.0).width(50.0).sizeToFit(.width)
+            self.quantityLabel.pin.before(of: self.plusButton, aligned: .center).margin(12.0).sizeToFit(.widthFlexible)
             self.minusButton.pin.before(of: self.quantityLabel, aligned: .center).margin(12.0).size(CGSize(width: 30.0, height: 30.0))
         }
     }

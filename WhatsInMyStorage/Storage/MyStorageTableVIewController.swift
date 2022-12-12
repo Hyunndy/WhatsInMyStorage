@@ -79,6 +79,12 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         self.setNavigationBar()
         self.rx.fetch.accept(())
         
+        // 저장하기
+        self.mainView.confirmButton.rx.tap
+            .map { Reactor.Action.confirm(self.currentSectionData)}
+            .bind(to: self.reactor!.action)
+            .disposed(by: self.disposeBag)
+        
     }
     
     func setUI() {
@@ -95,17 +101,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         self.navigationItem.rightBarButtonItems = [self.addButton, self.editButton]
         
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
-//        self.navigationController?.navigationBar.backgroundColor = .white
-        
-//        let appearance = UINavigationBarAppearance()
-//        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
-//        appearance.backgroundColor = .white
-//
-//        navigationController?.navigationBar.standardAppearance = appearance
-//        navigationController?.navigationBar.compactAppearance = appearance
-//        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
-    
     
     func bind(reactor: MyStorageReactor) {
         self.bindAction(reactor: reactor)
@@ -184,6 +180,16 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
                 guard let self else { return }
                 
                 self.openPopup()
+            })
+            .disposed(by: self.disposeBag)
+        
+        // 저장하기
+        reactor
+            .skipInitPulse(\.$confirm)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+                
+                self.navigationController?.popViewController(animated: true)
             })
             .disposed(by: self.disposeBag)
     }

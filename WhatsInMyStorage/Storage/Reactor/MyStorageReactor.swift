@@ -24,6 +24,7 @@ final class MyStorageReactor: Reactor {
         case newinsertStorage([MyStorageSectionData], MyStorageSectionData)
         case editing(Bool)
         case add
+        case confirm([MyStorageSectionData])
     }
     
     /// 실제 해야될 작업
@@ -32,6 +33,7 @@ final class MyStorageReactor: Reactor {
         case setStorageData([MyStorageSectionData])
         case setEditing(Bool)
         case openPopup
+        case confirm
 //        case appendStorageData([StorageData], nextPage: Int?)
     }
     
@@ -41,6 +43,7 @@ final class MyStorageReactor: Reactor {
         @Pulse var storageData: [MyStorageSectionData]?
         @Pulse var isEditing: Bool = false
         @Pulse var openPopup: Void = ()
+        @Pulse var confirm: Void = ()
     }
     
     var initialState: State
@@ -81,6 +84,13 @@ final class MyStorageReactor: Reactor {
             return Observable.concat([
                 Observable.just(Mutation.openPopup)
             ])
+        case let .confirm(currentStorage):
+            return Observable.concat([
+                
+                // 1) 데이터 저장하기
+                Observable.just(Mutation.confirm)
+            ])
+            
         }
     }
     
@@ -99,6 +109,9 @@ final class MyStorageReactor: Reactor {
             return newState
         case .openPopup:
             newState.openPopup = ()
+            return newState
+        case .confirm:
+            newState.confirm = ()
             return newState
         }
     }
