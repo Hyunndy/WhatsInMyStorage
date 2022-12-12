@@ -61,10 +61,14 @@ class MyStorageTableView: UIView {
     func setRx() {
         
         // CollectionView.DataSource 세팅
-        self.dataSource = RxTableViewSectionedReloadDataSource<MyStorageSectionData> { dataSource, tableView, indexPath, item in
+        self.dataSource = RxTableViewSectionedReloadDataSource<MyStorageSectionData> { [weak self] dataSource, tableView, indexPath, item in
+            guard let self else { return UITableViewCell() }
+            
             let cell = tableView.dequeueReusableCell(withIdentifier: "MyStorageCell", for: indexPath) as! MyStorageCell
             
             cell.isExpandable = self.expandableSet.contains(indexPath.section)
+            
+            print("섹션 \(indexPath.section) Cell의 isExpandable = \(cell.isExpandable)")
             
             cell.configure(storage: item)
             cell.reactor = MyStorageCellReactor(quantity: item.quantity)
@@ -227,16 +231,15 @@ extension MyStorageTableView: UITableViewDelegate {
             .bind(onNext: { [weak self] in
                 guard let self else { return }
                 
+                print("터치된 Section \(section)")
+                
                 if self.expandableSet.contains(section) {
                     self.expandableSet.remove(section)
                 } else {
                     self.expandableSet.insert(section)
                 }
                 
-                
                 self.tableView.reloadSections([section], animationStyle: .automatic)
-                
-                
             }).disposed(by: header.disposeBag)
         
         return header
