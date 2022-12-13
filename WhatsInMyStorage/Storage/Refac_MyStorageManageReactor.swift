@@ -9,7 +9,7 @@ import UIKit
 import ReactorKit
 import RxDataSources
 
-typealias StorageSection = SectionModel<String, Refac_MyStorageCellReactor>
+//typealias StorageSection = SectionModel<String, Refac_MyStorageCellReactor>
 
 class Refac_MyStorageManageReactor: Reactor {
     
@@ -20,25 +20,42 @@ class Refac_MyStorageManageReactor: Reactor {
         case moveTask(IndexPath, IndexPath)
         /// itemDeleted
         case deleteTask(IndexPath)
+        /// add
+        case openAddPopup
+        case addTask([MyStorageSectionData], MyStorageSectionData)
+        /// edit
+        case editTask(Bool)
+        /// expand / unexpand Cells
+        case expandSectionRows(Int)
     }
 
     enum Mutation {
-        /// refresh
-        case setStorages([StorageSection])
+        /// refresh, add
+        case setStorages([MyStorageSectionData])
         /// itemMoved
         case moveStorageItem(IndexPath, IndexPath)
         /// itemDeleted
         case deleteStorageItem(IndexPath)
+        /// edit
+        case editTask(Bool)
+        case openAddPopup
+        /// expand / unexpand Cells
+        case setExpandedSectionSet(Set<Int>)
+        case reloadSection(Int)
     }
     
     struct State {
-        @Pulse var storages: [StorageSection]
+        @Pulse var isEditing: Bool = false
+        @Pulse var storages: [MyStorageSectionData]
+        @Pulse var openPopup: Void = ()
+        @Pulse var expandedSectionSet = Set<Int>()
+        var reloadSection: Int = 0
     }
     
     var initialState: State
     
     init() {
-        self.initialState = State(storages: [StorageSection(model: "", items: [])])
+        self.initialState = State(storages: [MyStorageSectionData(header: "", items: [StorageData]())])
     }
     
     /// Action -> Mutation
@@ -48,6 +65,26 @@ class Refac_MyStorageManageReactor: Reactor {
             return Observable.concat([
                 self.getStorageData(page: 1)
                     .map { Mutation.setStorages($0) }
+            ])
+        case .addTask(let currentSectionData, let addedSectionData):
+            return Observable.concat([
+                self.addStorageData(currentData: currentSectionData, addedData: addedSectionData)
+                    .map { Mutation.setStorages($0)}
+            ])
+        case .editTask(let isEditing):
+            return Observable.concat([
+                Observable.just(Mutation.editTask(isEditing))
+            ])
+        case .openAddPopup:
+            return Observable.concat([
+                Observable.just(Mutation.openAddPopup)
+            ])
+        case .expandSectionRows(let section):
+            return Observable.concat([
+                self.setExpandedSectionSet(section: section)
+                    .map { Mutation.setExpandedSectionSet($0) },
+                
+                Observable.just(Mutation.reloadSection(section))
             ])
         default:
             return Observable.just(Mutation.deleteStorageItem(IndexPath(row: 1, section: 1)))
@@ -65,28 +102,68 @@ class Refac_MyStorageManageReactor: Reactor {
         switch mutation {
         case .setStorages(let storages):
             newState.storages = storages
-            return newState
         case .moveStorageItem(let indexPath, let indexPath2):
             return newState
         case .deleteStorageItem(let indexPath):
             return newState
+        case .editTask(let isEditing):
+            newState.isEditing = isEditing
+        case .openAddPopup:
+            newState.openPopup = ()
+        case .setExpandedSectionSet(let expandSectionSet):
+            newState.expandedSectionSet = expandSectionSet
+        case .reloadSection(let section):
+            newState.reloadSection = section
         }
+        
+        return newState
     }
 }
 
 extension Refac_MyStorageManageReactor {
-    private func getStorageData(page: Int) -> Observable<[StorageSection]> {
+    private func setExpandedSectionSet(section: Int) -> Observable<Set<Int>> {
+        
+        var set = self.currentState.expandedSectionSet
+        
+        if set.contains(section) {
+            set.remove(section)
+        } else {
+            set.insert(section)
+        }
+        
+        return Observable.just(set)
+    }
+    
+    private func getStorageData(page: Int) -> Observable<[MyStorageSectionData]> {
         
         let storageData = [StorageData(product: "양파", quantity: 1),
                            StorageData(product: "가공육", quantity: 2),
                            StorageData(product: "토마토", quantity: 3),
                            StorageData(product: "소세지", quantity: 4)]
         
-        var reactorArray = [Refac_MyStorageCellReactor]()
-        for storageDatum in storageData {
-            reactorArray.append(Refac_MyStorageCellReactor(data: storageDatum))
+        let intialSectionData = [MyStorageSectionData(header: "핫도그",items: storageData)]
+        
+        return Observable.just(intialSectionData)
+    }
+    
+    private func addStorageData(currentData: [MyStorageSectionData], addedData: MyStorageSectionData) -> Observable<[MyStorageSectionData]> {
+        
+        var convertedStorageData = currentData
+        
+        // 현재 있는 섹션인지 찾기
+        if let idx = currentData.firstIndex(where: { $0.header == addedData.header }) {
+            
+            // 있는 아이템인지도 찾기
+            if let itemIdx = convertedStorageData[idx].items.firstIndex(where: { $0.product == addedData.items[0].product }) {
+                convertedStorageData[idx].items[itemIdx].quantity += addedData.items[0].quantity
+            } else {
+                convertedStorageData[idx].items += addedData.items
+            }
+            
+        } else {
+            convertedStorageData.append(addedData)
         }
         
-        return Observable.just([StorageSection(model: "핫도그", items: reactorArray)])
+        return Observable.just(convertedStorageData)
     }
 }
