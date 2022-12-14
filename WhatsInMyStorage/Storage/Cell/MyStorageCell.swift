@@ -169,7 +169,7 @@ extension MyStorageCell: View {
             .disposed(by: self.disposeBag)
         
         reactor
-            .skipInitPulse(\.$quantity)
+            .pulse(\.$quantity)
             .bind(onNext: { [weak self] in
                 guard let self else { return }
                 

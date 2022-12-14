@@ -30,12 +30,8 @@ class Refac_MyStorageManageReactor: Reactor {
     }
 
     enum Mutation {
-        /// refresh, add
+        /// refresh, add, move
         case setStorages([MyStorageSectionData])
-        /// itemMoved
-        case moveStorageItem(IndexPath, IndexPath)
-        /// itemDeleted
-        case deleteStorageItem(IndexPath)
         /// edit
         case editTask(Bool)
         case openAddPopup
@@ -49,7 +45,7 @@ class Refac_MyStorageManageReactor: Reactor {
         @Pulse var storages: [MyStorageSectionData]
         @Pulse var openPopup: Void = ()
         @Pulse var expandedSectionSet = Set<Int>()
-        var reloadSection: Int = 0
+        @Pulse var reloadSection: Int = 0
     }
     
     var initialState: State
@@ -86,12 +82,16 @@ class Refac_MyStorageManageReactor: Reactor {
                 
                 Observable.just(Mutation.reloadSection(section))
             ])
-        default:
-            return Observable.just(Mutation.deleteStorageItem(IndexPath(row: 1, section: 1)))
-//        case .moveTask(let indexPath, let indexPath2):
-//
-//        case .deleteTask(let indexPath):
-            
+        case let .moveTask(sourceIndexPath, targetIndexPath):
+            return Observable.concat([
+                self.moveStorageData(sourceIndexPath: sourceIndexPath, targetIndexPath: targetIndexPath)
+                    .map { Mutation.setStorages($0) }
+            ])
+        case .deleteTask(let indexPath):
+            return Observable.concat([
+                self.deleteStorageData(indexPath: indexPath)
+                    .map { Mutation.setStorages($0) }
+            ])
         }
     }
     
@@ -102,10 +102,7 @@ class Refac_MyStorageManageReactor: Reactor {
         switch mutation {
         case .setStorages(let storages):
             newState.storages = storages
-        case .moveStorageItem(let indexPath, let indexPath2):
-            return newState
-        case .deleteStorageItem(let indexPath):
-            return newState
+            break
         case .editTask(let isEditing):
             newState.isEditing = isEditing
         case .openAddPopup:
@@ -165,5 +162,37 @@ extension Refac_MyStorageManageReactor {
         }
         
         return Observable.just(convertedStorageData)
+    }
+    
+    private func moveStorageData(sourceIndexPath: IndexPath, targetIndexPath: IndexPath) -> Observable<[MyStorageSectionData]> {
+        
+        var sections = self.currentState.storages
+        var sourceItems = sections[sourceIndexPath.section].items
+        var destinationItems = sections[targetIndexPath.section].items
+         
+        if sourceIndexPath.section == targetIndexPath.section {
+            destinationItems.insert(destinationItems.remove(at: sourceIndexPath.row),
+                                    at: targetIndexPath.row)
+            let destinationSection = MyStorageSectionData(original: sections[targetIndexPath.section], items: destinationItems)
+            sections[sourceIndexPath.section] = destinationSection
+        }
+         
+        return Observable.just(sections)
+    }
+    
+    private func deleteStorageData(indexPath: IndexPath) -> Observable<[MyStorageSectionData]> {
+        
+        var sectionDataArray = self.currentState.storages
+        
+        // 현재 섹션
+        var currentSection = sectionDataArray[indexPath.section]
+        
+        // 현재 섹션의 아이템 제거
+        currentSection.items.remove(at: indexPath.row)
+        
+        // 섹션 업데이트!
+        sectionDataArray[indexPath.section] = currentSection
+        
+        return Observable.just(sectionDataArray)
     }
 }

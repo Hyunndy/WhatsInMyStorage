@@ -135,7 +135,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         
         /// 인디케이터 .pulse(\.$myFavoriteTicket)
         reactor
-            .skipInitPulse(\.$isPlayIndicator)
+            .pulse(\.$isPlayIndicator)
             .bind(onNext: { isPlayIndicator in
                 
                 /// 인디케이터 어케하면 예쁘게 처리할 수 있을지?ㅎㅎ 고민좀?ㅎ
@@ -151,7 +151,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         
         // Fetch
         reactor
-            .skipInitPulse(\.$storageData)
+            .pulse(\.$storageData)
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 
@@ -165,7 +165,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         
         // Editing
         reactor
-            .skipInitPulse(\.$isEditing)
+            .pulse(\.$isEditing)
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 
@@ -175,7 +175,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         
         // + 버튼
         reactor
-            .skipInitPulse(\.$openPopup)
+            .pulse(\.$openPopup)
             .subscribe(onNext: { [weak self] _ in
                 guard let self else { return }
                 
@@ -185,7 +185,7 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         
         // 저장하기
         reactor
-            .skipInitPulse(\.$confirm)
+            .pulse(\.$confirm)
             .subscribe(onNext: { [weak self] _ in
                 guard let self else { return }
                 

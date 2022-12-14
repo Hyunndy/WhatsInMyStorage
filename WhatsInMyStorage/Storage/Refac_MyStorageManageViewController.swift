@@ -39,11 +39,11 @@ class Refac_MyStorageManageViewController: UIViewController, View {
     lazy var tableView: UITableView = {
         return UITableView(frame: .zero, style: .plain).then {
             $0.separatorInset = .zero
-            $0.allowsSelection = false
             $0.backgroundColor = .brown
-            $0.estimatedRowHeight = 56.0
-            $0.automaticallyAdjustsScrollIndicatorInsets = false
-            $0.contentInsetAdjustmentBehavior = .never
+            $0.estimatedRowHeight = 60.0
+            $0.automaticallyAdjustsScrollIndicatorInsets = true 
+            $0.contentInsetAdjustmentBehavior = .always
+            $0.contentInset = .zero
             if #available(iOS 15.0, *) {
                 $0.sectionHeaderTopPadding = 0.0
             } else {
@@ -68,23 +68,22 @@ class Refac_MyStorageManageViewController: UIViewController, View {
     }()
     
     lazy var dataSource: RxTableViewSectionedReloadDataSource<MyStorageSectionData>! = {
-       return RxTableViewSectionedReloadDataSource<MyStorageSectionData> { [weak self] dataSource, tableView, indexPath, item in
-           guard let self else { return UITableViewCell() }
-           
-           let cell = tableView.dequeueReusableCell(withIdentifier: "Refac_MyStorageCell", for: indexPath) as! Refac_MyStorageCell
-
-           /// @유현지 <궁금증>
-           /// Cell안에 (-) (+) 버튼이 있고, 화면에 뿌려주는 StorageSectionData는 VC가 갖고있다.
-           /// 따라서 Cell의 Reactor는 Action이 없고, Cell의 Action이 VC의 Reactor로 가야될 것 같은데
-           /// ReactorKit에서는 Cell도 View라고 보고 Reacttor가 필요하다고 한다.
-//           cell.reactor = item
-
-           cell.quantity = "\(item.quantity)"
-           cell.product = item.product
-           cell.isExpandable = self.reactor?.currentState.expandedSectionSet.contains(indexPath.section) ?? false
-           
-           return cell
-       }
+        return RxTableViewSectionedReloadDataSource<MyStorageSectionData> { [weak self] dataSource, tableView, indexPath, item in
+            guard let self else { return UITableViewCell() }
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Refac_MyStorageCell", for: indexPath) as! Refac_MyStorageCell
+            
+            /// @유현지 <궁금증>
+            /// Cell안에 (-) (+) 버튼이 있고, 화면에 뿌려주는 StorageSectionData는 VC가 갖고있다.
+            /// 따라서 Cell의 Reactor는 Action이 없고, Cell의 Action이 VC의 Reactor로 가야될 것 같은데
+            /// ReactorKit에서는 Cell도 View라고 보고 Reacttor가 필요하다고 한다.
+            //           cell.reactor = item
+            cell.quantity = "\(item.quantity)"
+            cell.product = item.product
+            cell.isExpandable = self.reactor?.currentState.expandedSectionSet.contains(indexPath.section) ?? false
+            
+            return cell
+        }
     }()
     
     init(reactor: Refac_MyStorageManageReactor) {
@@ -182,8 +181,6 @@ class Refac_MyStorageManageViewController: UIViewController, View {
     }
     
     private func bindDataSource(reactor: Refac_MyStorageManageReactor) {
-        self.tableView.rx.setDelegate(self)
-            .disposed(by: self.disposeBag)
         
         self.dataSource
             .canEditRowAtIndexPath = { (_, indexPath) in
@@ -194,12 +191,7 @@ class Refac_MyStorageManageViewController: UIViewController, View {
 //                    return true
 //                }
             }
-        
-        self.dataSource
-            .canMoveRowAtIndexPath = { (_, _) in
-                return true
-            }
-        
+    
         reactor
             .pulse(\.$storages)
             .bind(to: self.tableView.rx.items(dataSource: self.dataSource))
@@ -207,6 +199,11 @@ class Refac_MyStorageManageViewController: UIViewController, View {
     }
     
     private func bindTableViewRx(reactor: Refac_MyStorageManageReactor) {
+        
+        self.tableView.rx.setDelegate(self)
+            .disposed(by: self.disposeBag)
+        
+        // ControlEvent<ItemMovedEvent>가 (IndexPath), (IndexPath)라서 전달 가능
         self.tableView.rx.itemMoved
             .map(Reactor.Action.moveTask)
             .bind(to: reactor.action)
@@ -218,8 +215,7 @@ class Refac_MyStorageManageViewController: UIViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor
-            .state
-            .map { $0.reloadSection }
+            .pulse(\.$reloadSection)
             .bind(with: self, onNext: { object, section in
                 object.tableView.reloadSections([section], animationStyle: .automatic)
             })
@@ -247,10 +243,16 @@ extension Refac_MyStorageManageViewController: UITableViewDelegate {
     // The UITableView will call the cell's sizeThatFit() method to compute the height.
     // WANRING: You must also set the UITableView.estimatedRowHeight for this to work.
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        print("Cell 높이22 : \(UITableView.automaticDimension)")
+        
         return (self.reactor?.currentState.expandedSectionSet.contains(indexPath.section) ?? false) ? .zero : UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        print("Cell 높이 : \(UITableView.automaticDimension)")
+        
+        
         return (self.reactor?.currentState.expandedSectionSet.contains(indexPath.section) ?? false) ? .zero : UITableView.automaticDimension
     }
 
@@ -270,13 +272,13 @@ extension Refac_MyStorageManageViewController: UITableViewDelegate {
             header.titleButton.rx.tap
                 .map { Reactor.Action.expandSectionRows(section) }
                 .bind(to: reactor.action)
-                .disposed(by: self.disposeBag)
+                .disposed(by: header.disposeBag)
         }
  
         return header
     }
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {}
+//
+//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {}
 }
 
 
