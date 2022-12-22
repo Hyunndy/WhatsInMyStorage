@@ -12,7 +12,20 @@ class MyStorageTableSectionHeaderView: UITableViewHeaderFooterView {
 
     static let reuseIdentifier = "MyStorageTableSectionHeader"
     
-    let titleButton = UIButton()
+    lazy var titleButton: UIButton = {
+        let button = UIButton().then {
+            $0.setTitleColor(.wms.green, for: .normal)
+            $0.titleLabel?.textAlignment = .left
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 20.0)
+            $0.contentHorizontalAlignment = .left
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 24.0, bottom: 0.0, right: 0.0)
+            $0.layer.borderWidth = 2.0
+            $0.layer.borderColor = UIColor.wms.gray.cgColor
+            $0.clipsToBounds = true
+        }
+        
+        return button
+    }()
     
     var title: String? {
         didSet {
@@ -37,12 +50,6 @@ class MyStorageTableSectionHeaderView: UITableViewHeaderFooterView {
     private func setUI() {
         
         self.contentView.addSubview(self.titleButton)
-        _ = self.titleButton.then {
-            $0.setTitleColor(.wms.blue, for: .normal)
-            $0.titleLabel?.textAlignment = .left
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20.0)
-            $0.backgroundColor = .yellow
-        }
     }
     
     override func layoutSubviews() {

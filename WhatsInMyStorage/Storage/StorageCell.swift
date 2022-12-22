@@ -12,25 +12,19 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-class Refac_MyStorageCell: UITableViewCell, View {
-    func bind(reactor: Refac_MyStorageCellReactor) {
-        self.product = "\(reactor.currentState.product)"
-        self.quantity = "\(reactor.currentState.quantity)"
-    }
+class StorageCell: UITableViewCell {
     
-    typealias Reactor = Refac_MyStorageCellReactor
-    
-    static let reuseIdentifier = "Refac_MyStorageCell"
+    static let reuseIdentifier = "StorageCell"
     
     private let minusButton = UIButton()
     private let plusButton = UIButton()
     private let quantityLabel = UILabel()
     private let productLabel = UILabel()
     
-    @Proxy(\Refac_MyStorageCell.productLabel.text)
+    @Proxy(\StorageCell.productLabel.text)
     var product: String?
     
-    @Proxy(\Refac_MyStorageCell.quantityLabel.text)
+    @Proxy(\StorageCell.quantityLabel.text)
     var quantity: String?
     
     struct Observable {
@@ -47,7 +41,7 @@ class Refac_MyStorageCell: UITableViewCell, View {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: MyStorageCell.reuseIdentifier)
         
-        self.backgroundColor = .white
+        self.backgroundColor = .yellow
         self.showsReorderControl = true
         
         self.setUI()
@@ -60,7 +54,7 @@ class Refac_MyStorageCell: UITableViewCell, View {
     }
     
     private func setUI() {
-        self.contentView.backgroundColor = .white
+        self.contentView.backgroundColor = .yellow
         
         self.contentView.addSubview(self.productLabel)
         _ = self.productLabel.then {
@@ -147,6 +141,8 @@ class Refac_MyStorageCell: UITableViewCell, View {
     
     override func willTransition(to state: UITableViewCell.StateMask) {
         super.willTransition(to: state)
+        
+        
         
         self.minusButton.isHidden = (state.rawValue == 0)
         self.plusButton.isHidden = (state.rawValue == 0)

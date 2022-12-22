@@ -80,9 +80,7 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
             .bind(onNext: { [weak self] in
                 guard let self else { return }
                 
-//                let myStorageViewController = MyStorageTableViewController()
-//                myStorageViewController.reactor = MyStorageReactor()
-                let myStorageViewController = Refac_MyStorageManageViewController(reactor: Refac_MyStorageManageReactor())
+                let myStorageViewController = StorageManageViewController(reactor: StorageManageReactor())
                 myStorageViewController.hidesBottomBarWhenPushed = true
             
                 self.navigationController?.show(myStorageViewController, sender: nil)

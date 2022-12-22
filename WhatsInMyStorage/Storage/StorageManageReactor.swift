@@ -1,5 +1,5 @@
 //
-//  Refac_MyStorageManageReactor.swift
+//  StorageManageReactor.swift
 //  WhatsInMyStorage
 //
 //  Created by hyunndy on 2022/12/13.
@@ -9,9 +9,7 @@ import UIKit
 import ReactorKit
 import RxDataSources
 
-//typealias StorageSection = SectionModel<String, Refac_MyStorageCellReactor>
-
-class Refac_MyStorageManageReactor: Reactor {
+class StorageManageReactor: Reactor {
     
     enum Action {
         /// viewDidLoad, Refresh
@@ -80,7 +78,7 @@ class Refac_MyStorageManageReactor: Reactor {
                 self.setExpandedSectionSet(section: section)
                     .map { Mutation.setExpandedSectionSet($0) },
                 
-                Observable.just(Mutation.reloadSection(section))
+                Observable.just(Mutation.reloadSection(section)),
             ])
         case let .moveTask(sourceIndexPath, targetIndexPath):
             return Observable.concat([
@@ -117,7 +115,7 @@ class Refac_MyStorageManageReactor: Reactor {
     }
 }
 
-extension Refac_MyStorageManageReactor {
+extension StorageManageReactor {
     private func setExpandedSectionSet(section: Int) -> Observable<Set<Int>> {
         
         var set = self.currentState.expandedSectionSet

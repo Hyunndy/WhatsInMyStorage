@@ -10,8 +10,27 @@ import UIKit
 
 class MyStorageTableViewHeader: UIView {
     
-    private let titleLabel = UILabel()
-    private let quantityLabel = UILabel()
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel().then {
+            $0.text = "Product"
+            $0.textColor = UIColor.wms.green
+            $0.textAlignment = .left
+            $0.font = UIFont.systemFont(ofSize: 25.0, weight: .bold)
+        }
+        
+        return label
+    }()
+    
+    private lazy var quantityLabel: UILabel = {
+        let label = UILabel().then {
+            $0.text = "Quantity"
+            $0.textColor = UIColor.wms.green
+            $0.textAlignment = .left
+            $0.font = UIFont.systemFont(ofSize: 25.0, weight: .bold)
+        }
+        
+        return label
+    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,22 +39,8 @@ class MyStorageTableViewHeader: UIView {
     }
     
     private func setUI() {
-        
         self.addSubview(self.titleLabel)
-        _ = self.titleLabel.then {
-            $0.text = "Product"
-            $0.textColor = UIColor.wms.blue
-            $0.textAlignment = .left
-            $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
-        }
-        
         self.addSubview(self.quantityLabel)
-        _ = self.quantityLabel.then {
-            $0.text = "Quantity"
-            $0.textColor = UIColor.wms.blue
-            $0.textAlignment = .left
-            $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
-        }
     }
     
     override func layoutSubviews() {
