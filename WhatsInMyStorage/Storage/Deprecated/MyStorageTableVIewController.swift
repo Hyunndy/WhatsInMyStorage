@@ -56,15 +56,15 @@ class MyStorageTableViewController: UIViewController, ReactorViewControllerDeleg
         guard let reactor = self.reactor else { return }
         
         // 액션에 연결
-        let popupViewController = PopupViewController()
-        popupViewController.rx.addedStorageData
+        let StorageAddPopupViewController = StorageAddPopupViewController()
+        StorageAddPopupViewController.rx.addedStorageData
             .map { addedStorageData in
                 Reactor.Action.newinsertStorage(self.currentSectionData, addedStorageData)
             }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.present(popupViewController, animated: true)
+        self.present(StorageAddPopupViewController, animated: true)
     }
     
     override func loadView() {

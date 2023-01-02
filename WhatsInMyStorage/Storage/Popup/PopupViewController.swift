@@ -1,5 +1,5 @@
 //
-//  PopupViewController.swift
+//  StorageAddPopupViewController.swift
 //  WhatsInMyStorage
 //
 //  Created by hyunndy on 2022/11/26.
@@ -13,23 +13,112 @@ import RxKeyboard
 
 final class popupView: UIView {
     
-    let contentView = UIView()
-    let titleLabel = UILabel()
-    
-    let sectionLabel = UILabel()
-    let sectionTextField = UITextField()
-    
-    let infoLabel = UILabel()
-    let productTextField = UITextField()
-    let info2Label = UILabel()
-    let quantityTextField = UITextField()
-    let confirmButton = UIButton()
-    
-    var keyBoardHeight: CGFloat = 0.0
-    
     /// 섹션 라벨 + 텍스트필드
     class PopupSectionItem: UIView {
         
+        @Proxy(\PopupSectionItem.label.text)
+        var title: String?
+        
+        @Proxy(\PopupSectionItem.textField.text)
+        var item: String?
+        
+        @Proxy(\PopupSectionItem.textField.placeholder)
+        var placeholder: String?
+        
+        var isEditing: Bool {
+            return self.textField.isEditing
+        }
+        
+        private lazy var label: UILabel = {
+            return UILabel().then {
+                $0.font = .boldSystemFont(ofSize: 17.0)
+                $0.textColor = UIColor.wms.green
+            }
+        }()
+        
+        private lazy var textField: UITextField = {
+            return UITextField().then {
+                $0.font = .boldSystemFont(ofSize: 15.0)
+                $0.textColor = UIColor.black
+                $0.layer.borderColor = UIColor.wms.green.cgColor
+                $0.layer.borderWidth = 1.0
+                $0.layer.cornerRadius = 4.0
+                $0.clipsToBounds = true
+                $0.addLeftPadding(padding: 5.0)
+            }
+        }()
+        
+        init() {
+            super.init(frame: .zero)
+            
+            self.addSubview(self.label)
+            self.addSubview(self.textField)
+        }
+        
+        convenience init(title: String? = nil, placeholder: String? = nil) {
+            self.init()
+            
+            self.title = title
+            self.placeholder = placeholder
+        }
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            
+            self.label.pin.top().horizontally(10.0).sizeToFit(.width)
+            self.textField.pin.below(of: self.label).marginTop(5.0).bottom().horizontally(10.0).height(30.0)
+        }
+        
+        override func sizeThatFits(_ size: CGSize) -> CGSize {
+            return CGSize(width: self.label.frame.maxX, height: self.label.frame.maxY + 5.0 + 30.0)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
+    
+    /// 제목
+    private let titleLabel: UILabel = {
+        return UILabel().then {
+            $0.text = "재고 추가"
+            $0.font = .boldSystemFont(ofSize: 20.0)
+            $0.textColor = UIColor.black
+            $0.textAlignment = .center
+        }
+    }()
+    
+    let contentView = UIView()
+    lazy var confirmButton: UIButton = {
+        return UIButton().then {
+            $0.setTitle("확인", for: .normal)
+            $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
+            $0.backgroundColor = UIColor.wms.green
+            $0.setTitleColor(UIColor.white, for: .normal)
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 4.0
+        }
+    }()
+    
+    /// 종류
+    lazy var kindsSection: PopupSectionItem = {
+        return PopupSectionItem(title: "종류", placeholder: "종류를 입력하세요.")
+    }()
+    /// 제품명
+    let productNameSection: PopupSectionItem = {
+        return PopupSectionItem(title: "제품명", placeholder: "제품명을 입력하세요.")
+    }()
+    /// 갯수
+    let quantitySection: PopupSectionItem = {
+        return PopupSectionItem(title: "갯수", placeholder: "갯수를 입력하세요.")
+    }()
+    
+    var keyBoardHeight: CGFloat = 0.0
+    
+    /// 키보드 올라와있는지 여부
+    var isEditing: Bool {
+        return (self.kindsSection.isEditing || self.productNameSection.isEditing || self.quantitySection.isEditing)
     }
     
     init() {
@@ -44,81 +133,11 @@ final class popupView: UIView {
             $0.backgroundColor = .white
         }
         
-        self.contentView.addSubview(titleLabel)
-        _ = titleLabel.then {
-            $0.text = "재고 추가"
-            $0.font = .boldSystemFont(ofSize: 20.0)
-            $0.textColor = UIColor.black
-            $0.textAlignment = .center
-        }
-        
-        self.contentView.addSubview(sectionLabel)
-        _ = sectionLabel.then {
-            $0.text = "종류"
-            $0.font = .boldSystemFont(ofSize: 17.0)
-            $0.textColor = UIColor.wms.green
-        }
-        
-        self.contentView.addSubview(sectionTextField)
-        _ = sectionTextField.then {
-            $0.font = .boldSystemFont(ofSize: 15.0)
-            $0.textColor = UIColor.black
-            $0.placeholder = "섹션을 입력하세요."
-            $0.layer.borderColor = UIColor.wms.green.cgColor
-            $0.layer.borderWidth = 1.0
-            $0.layer.cornerRadius = 4.0
-            $0.clipsToBounds = true
-            $0.addLeftPadding(padding: 5.0)
-        }
-        
-        self.contentView.addSubview(infoLabel)
-        _ = infoLabel.then {
-            $0.text = "제품명"
-            $0.font = .boldSystemFont(ofSize: 17.0)
-            $0.textColor = UIColor.wms.green
-        }
-        
-        self.contentView.addSubview(self.productTextField)
-        _ = self.productTextField.then {
-            $0.font = .boldSystemFont(ofSize: 15.0)
-            $0.textColor = UIColor.black
-            $0.placeholder = "항목을 입력하세요."
-            $0.layer.borderColor = UIColor.wms.green.cgColor
-            $0.layer.borderWidth = 1.0
-            $0.layer.cornerRadius = 4.0
-            $0.clipsToBounds = true
-            $0.addLeftPadding(padding: 5.0)
-        }
-        
-        self.contentView.addSubview(info2Label)
-        _ = info2Label.then {
-            $0.text = "갯수"
-            $0.font = .boldSystemFont(ofSize: 17.0)
-            $0.textColor = UIColor.wms.green
-        }
-    
-        self.contentView.addSubview(self.quantityTextField)
-        _ = self.quantityTextField.then {
-            $0.font = .boldSystemFont(ofSize: 15.0)
-            $0.textColor = UIColor.black
-            $0.layer.borderColor = UIColor.wms.green.cgColor
-            $0.layer.borderWidth = 1.0
-            $0.layer.cornerRadius = 4.0
-            $0.clipsToBounds = true
-            $0.addLeftPadding(padding: 5.0)
-            $0.placeholder = "수량을 입력하세요."
-        }
-        
+        self.contentView.addSubview(self.titleLabel)
+        self.contentView.addSubview(self.kindsSection)
+        self.contentView.addSubview(self.productNameSection)
+        self.contentView.addSubview(self.quantitySection)
         self.contentView.addSubview(self.confirmButton)
-        _ = self.confirmButton.then {
-            $0.setTitle("확인", for: .normal)
-            $0.setTitleColor(.black, for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
-            $0.backgroundColor = UIColor.wms.green
-            $0.setTitleColor(UIColor.white, for: .normal)
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 4.0
-        }
     }
     
     override func layoutSubviews() {
@@ -131,14 +150,10 @@ final class popupView: UIView {
         }
         
         self.titleLabel.pin.top(15.0).horizontally().sizeToFit(.width)
-        self.sectionLabel.pin.below(of: self.titleLabel).marginTop(10.0).horizontally(10.0).sizeToFit()
-        self.sectionTextField.pin.below(of: self.sectionLabel, aligned: .left).marginTop(5.0).horizontally(10.0).height(30.0)
-
-        self.infoLabel.pin.below(of: self.sectionTextField).marginTop(10.0).horizontally(10.0).sizeToFit(.width)
-        self.productTextField.pin.below(of: self.infoLabel, aligned: .left).marginTop(5.0).horizontally(10.0).height(30.0)
+        self.kindsSection.pin.below(of: self.titleLabel).marginTop(10.0).horizontally().sizeToFit(.width)
+        self.productNameSection.pin.below(of: self.kindsSection).marginTop(10.0).horizontally().sizeToFit(.width)
+        self.quantitySection.pin.below(of: self.productNameSection).marginTop(10.0).horizontally().sizeToFit(.width)
         
-        self.info2Label.pin.below(of: self.productTextField, aligned: .left).marginTop(10.0).horizontally(10.0).sizeToFit(.width)
-        self.quantityTextField.pin.below(of: self.info2Label, aligned: .left).marginTop(5.0).horizontally(10.0).height(30.0)
         self.confirmButton.pin.bottom(15.0).horizontally(10.0).sizeToFit(.width)
     }
     
@@ -147,7 +162,7 @@ final class popupView: UIView {
     }
 }
 
-class PopupViewController: UIViewController, UIViewControllerDelegate {
+final class StorageAddPopupViewController: UIViewController, UIViewControllerDelegate {
     
     typealias mainViewType = popupView
     var mainView: popupView {
@@ -164,18 +179,11 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
     
     let rx = Observable()
     
-    static func show(target: UIViewController) {
-        let popupViewController = PopupViewController()
-        
-        target.navigationController?.present(popupViewController, animated: true)
-    }
-    
     func setUI() {
         self.view = popupView()
         
         self.providesPresentationContextTransitionStyle = true
         self.definesPresentationContext = true
-        self.modalPresentationStyle = .overFullScreen
         self.modalTransitionStyle = .crossDissolve
     }
     
@@ -189,10 +197,10 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
                        onNext: { (owner, _) in
                 
                 owner.dismiss(animated: true, completion: {
-                    guard let header = owner.mainView.sectionTextField.text, let product = owner.mainView.productTextField.text, let quantityString = owner.mainView.quantityTextField.text, let quantity = Int(quantityString) else { return }
+                    guard let kinds = owner.mainView.kindsSection.item, let product = owner.mainView.productNameSection.item, let quantityString = owner.mainView.quantitySection.item, let quantity = Int(quantityString) else { return }
                     
                     let item = StorageData(product: product, quantity: quantity)
-                    owner.rx.addedStorageData.accept(MyStorageSectionData(header: header, items: [item]))
+                    owner.rx.addedStorageData.accept(MyStorageSectionData(header: kinds, items: [item]))
                 })
             })
             .disposed(by: self.disposeBag)
@@ -230,7 +238,7 @@ class PopupViewController: UIViewController, UIViewControllerDelegate {
         
         guard let touch = touches.first, self.mainView.bounds.contains(touch.location(in: self.mainView.contentView)) == false  else { return }
         
-        if self.mainView.sectionTextField.isEditing || self.mainView.productTextField.isEditing || self.mainView.quantityTextField.isEditing {
+        if self.mainView.isEditing {
             self.mainView.endEditing(true)
         } else {
             self.dismiss(animated: true)

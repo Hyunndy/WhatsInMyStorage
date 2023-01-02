@@ -228,14 +228,14 @@ class StorageManageViewController: UIViewController, View {
         guard let reactor = self.reactor else { return }
         
         // 액션에 연결
-        let popupViewController = PopupViewController()
+        let StorageAddPopupViewController = StorageAddPopupViewController()
         
-        popupViewController.rx.addedStorageData
+        StorageAddPopupViewController.rx.addedStorageData
             .map { Reactor.Action.addTask(reactor.currentState.storages, $0) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.present(popupViewController, animated: true)
+        self.present(StorageAddPopupViewController, animated: true)
     }
 }
 
