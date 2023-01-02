@@ -131,10 +131,17 @@ extension StorageManageReactor {
     
     private func getStorageData(page: Int) -> Observable<[MyStorageSectionData]> {
         
-        let storageData = [StorageData(product: "양파", quantity: 1),
-                           StorageData(product: "가공육", quantity: 2),
+        let storageData = [StorageData(product: "양파123", quantity: 1),
+                           StorageData(product: "가공육23", quantity: 2),
                            StorageData(product: "토마토", quantity: 3),
-                           StorageData(product: "소세지", quantity: 4)]
+                           StorageData(product: "소세지", quantity: 4),
+                           StorageData(product: "소세지1232", quantity: 4),
+                           StorageData(product: "소세지51253", quantity: 4),
+                           StorageData(product: "소세지4123", quantity: 4),
+                           StorageData(product: "소세지515", quantity: 4),
+                           StorageData(product: "소세지1236", quantity: 4),
+                           StorageData(product: "소세지1247", quantity: 4),
+                           StorageData(product: "소세지815", quantity: 10)]
         
         let intialSectionData = [MyStorageSectionData(header: "핫도그",items: storageData)]
         

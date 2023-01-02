@@ -129,8 +129,8 @@ class StorageManageViewController: UIViewController, View {
     }
     
     private func layout() {
-        self.tableView.pin.top(self.view.pin.safeArea.top).horizontally().bottom()
-        self.confirmButton.pin.bottomCenter(to: self.tableView.anchor.bottomCenter).marginBottom(10.0).minWidth(self.tableView.frame.width - 50.0).height(56.0)
+        self.tableView.pin.top(self.view.pin.safeArea.top).horizontally().bottom(66.0)
+        self.confirmButton.pin.bottomCenter().marginBottom(10.0).minWidth(self.tableView.frame.width - 50.0).height(56.0)
     }
     
     // setRx처럼 다루기?

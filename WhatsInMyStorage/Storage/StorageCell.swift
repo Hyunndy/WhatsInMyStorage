@@ -41,7 +41,6 @@ class StorageCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: MyStorageCell.reuseIdentifier)
         
-        self.backgroundColor = .yellow
         self.showsReorderControl = true
         
         self.setUI()
@@ -54,7 +53,8 @@ class StorageCell: UITableViewCell {
     }
     
     private func setUI() {
-        self.contentView.backgroundColor = .yellow
+        self.backgroundColor = .white
+        self.contentView.backgroundColor = .white
         
         self.contentView.addSubview(self.productLabel)
         _ = self.productLabel.then {
@@ -72,8 +72,6 @@ class StorageCell: UITableViewCell {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
             $0.isHidden = true
-//            $0.layer.borderWidth = 0.1
-//            $0.layer.borderColor = UIColor.black.cgColor
         }
         
         self.contentView.addSubview(self.quantityLabel)
@@ -92,8 +90,6 @@ class StorageCell: UITableViewCell {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
             $0.isHidden = true
-//            $0.layer.borderWidth = 0.1
-//            $0.layer.borderColor = UIColor.black.cgColor
         }
     }
     
@@ -136,13 +132,10 @@ class StorageCell: UITableViewCell {
 
             return CGSize(width: contentView.frame.width, height: 60.0)
         }
-        
     }
     
     override func willTransition(to state: UITableViewCell.StateMask) {
         super.willTransition(to: state)
-        
-        
         
         self.minusButton.isHidden = (state.rawValue == 0)
         self.plusButton.isHidden = (state.rawValue == 0)

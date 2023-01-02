@@ -180,7 +180,7 @@ class MyStorageTableView: UIView {
     
     private func layout() {
         self.indicatorView.pin.center().sizeToFit()
-        self.tableView.pin.all()
+        self.tableView.pin.all().marginBottom(100.0)
         self.confirmButton.pin.bottomCenter(to: self.tableView.anchor.bottomCenter).marginBottom(10.0).minWidth(self.tableView.frame.width - 50.0).height(56.0)
     }
     

@@ -33,19 +33,6 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
     
     let fetch = PublishRelay<Void>()
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-        super.viewWillAppear(animated)
-        
-        
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        
-    }
-    
     override func loadView() {
         super.loadView()
         
