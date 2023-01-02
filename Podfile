@@ -8,6 +8,7 @@ target 'WhatsInMyStorage' do
   # Pods for WhatsInMyStorage
     pod 'RxSwift', '6.5.0'
     pod 'RxCocoa', '6.5.0'
+    pod 'RxKeyboard'
     pod 'ReactorKit'
     pod 'FlexLayout'
     pod 'PinLayout'

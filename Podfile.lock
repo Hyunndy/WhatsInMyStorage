@@ -1,0 +1,67 @@
+PODS:
+  - Differentiator (5.0.0)
+  - FlexLayout (1.3.24)
+  - lottie-ios (3.5.0)
+  - PinLayout (1.10.3)
+  - ReactorKit (3.2.0):
+    - RxSwift (~> 6.0)
+    - WeakMapTable (~> 1.1)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxDataSources (5.0.0):
+    - Differentiator (~> 5.0)
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxKeyboard (2.0.0):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
+  - Then (3.0.0)
+  - WeakMapTable (1.2.0)
+
+DEPENDENCIES:
+  - FlexLayout
+  - lottie-ios
+  - PinLayout
+  - ReactorKit
+  - RxCocoa (= 6.5.0)
+  - RxDataSources (~> 5.0)
+  - RxKeyboard
+  - RxSwift (= 6.5.0)
+  - Then
+
+SPEC REPOS:
+  trunk:
+    - Differentiator
+    - FlexLayout
+    - lottie-ios
+    - PinLayout
+    - ReactorKit
+    - RxCocoa
+    - RxDataSources
+    - RxKeyboard
+    - RxRelay
+    - RxSwift
+    - Then
+    - WeakMapTable
+
+SPEC CHECKSUMS:
+  Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
+  FlexLayout: 4c4dec5e4aafab84908dd864bb097baebef0d44e
+  lottie-ios: c55158d67d0629a260625cc2ded2052b829e3c3e
+  PinLayout: 0090ccbf29ae69af6ae5a15eaeaf27ed7b2c4d83
+  ReactorKit: e8b11d6b9c415405f381669b095c154a05b59eca
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxDataSources: aa47cc1ed6c500fa0dfecac5c979b723542d79cf
+  RxKeyboard: 4f5863f43b4ff0cbb2a20b94688d6b80c8a43c14
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
+  WeakMapTable: 05c694ce8439a7a9ebabb56187287a63c57673d6
+
+PODFILE CHECKSUM: cb09d2435a32ea0700421d3a34bbbeaa94306181
+
+COCOAPODS: 1.11.3
