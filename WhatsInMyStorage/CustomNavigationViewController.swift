@@ -17,6 +17,7 @@ class CustomNavigationViewController: UIViewController {
     override var title: String? {
         didSet {
             self.titleLabel.text = title
+            self.navigationBarView.layoutIfNeeded()
         }
     }
     
@@ -31,7 +32,6 @@ class CustomNavigationViewController: UIViewController {
         
         self.navigationBarView.addSubview(self.titleLabel)
         _ = self.titleLabel.then {
-            $0.text = "제목"
             $0.textAlignment = .center
             $0.textColor = .black
             $0.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
@@ -50,7 +50,7 @@ class CustomNavigationViewController: UIViewController {
         
         let navigationBarHeight = self.navigationController?.navigationBar.frame.height ?? 44.0
         self.navigationBarView.pin.top(self.view.safeAreaInsets.top).horizontally().height(navigationBarHeight)
-        self.titleLabel.pin.all()
+        self.titleLabel.pin.vertically().hCenter().sizeToFit(.height)
     }
 }
 

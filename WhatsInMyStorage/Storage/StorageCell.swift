@@ -67,7 +67,7 @@ class StorageCell: UITableViewCell {
         _ = self.minusButton.then {
             $0.contentMode = .center
             $0.setTitle("-", for: .normal)
-            $0.setTitleColor(UIColor.wms.blue, for: .normal)
+            $0.setTitleColor(UIColor.wms.green, for: .normal)
             $0.backgroundColor = UIColor.wms.gray
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0
@@ -85,7 +85,7 @@ class StorageCell: UITableViewCell {
         _ = self.plusButton.then {
             $0.contentMode = .center
             $0.setTitle("+", for: .normal)
-            $0.setTitleColor(UIColor.wms.blue, for: .normal)
+            $0.setTitleColor(UIColor.wms.green, for: .normal)
             $0.backgroundColor = UIColor.wms.gray
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 15.0

@@ -25,13 +25,24 @@ class StorageManageViewController: CustomNavigationViewController, View {
     var disposeBag = DisposeBag()
 
     // UI
-    lazy var editButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: nil)
+    lazy var editButton: UIButton = {
+        let button = UIButton().then {
+            $0.backgroundColor = .green
+            $0.setTitle("편집", for: .normal)
+            $0.titleLabel?.font = .systemFont(ofSize: 17.0, weight: .bold)
+            $0.setTitleColor(UIColor.wms.green, for: .normal)
+        }
         return button
     }()
     
-    lazy var addButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
+    lazy var addButton: UIButton = {
+        let button = UIButton().then {
+            $0.backgroundColor = .green
+            $0.setTitle("+", for: .normal)
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 3.0, right: 0.0)
+            $0.titleLabel?.font = .systemFont(ofSize: 20.0, weight: .bold)
+            $0.setTitleColor(UIColor.wms.green, for: .normal)
+        }
         return button
     }()
     
@@ -45,7 +56,6 @@ class StorageManageViewController: CustomNavigationViewController, View {
             $0.separatorStyle = .none
             $0.separatorInset = .zero
             $0.backgroundColor = .white
-//            $0.estimatedRowHeight = 60.0
             $0.automaticallyAdjustsScrollIndicatorInsets = true 
             $0.contentInsetAdjustmentBehavior = .always // 이 키워드가 moveCell에 영향을 주고있음
             $0.contentInset = .zero
@@ -81,8 +91,7 @@ class StorageManageViewController: CustomNavigationViewController, View {
             /// ReactorKit에서는 Cell도 View라고 보고 Reacttor가 필요하다고 한다.
             cell.isExpandable = self.reactor?.currentState.expandedSectionSet.contains(indexPath.section) ?? false
             cell.configure(storage: item)
-            
-            
+        
             return cell
         }
     }()
@@ -111,14 +120,8 @@ class StorageManageViewController: CustomNavigationViewController, View {
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.confirmButton)
         
-//        self.navigationItem.hidesBackButton = true
-//        self.navigationController?.isNavigationBarHidden = false
-//
-//        self.title = "재고 관리"
-//        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-//        self.navigationItem.rightBarButtonItems = [self.addButton, self.editButton]
-//
-//        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        self.navigationBarView.addSubview(self.editButton)
+        self.navigationBarView.addSubview(self.addButton)
     }
     
     override func viewDidLoad() {
@@ -135,7 +138,9 @@ class StorageManageViewController: CustomNavigationViewController, View {
     }
     
     private func layout() {
-//        self.tableView.pin.top(self.view.pin.safeArea.top).horizontally().bottom(66.0)
+        self.addButton.pin.vCenter().right(15.0).size(CGSize(width: 30.0, height: 30.0))
+        self.editButton.pin.left(of: self.addButton, aligned: .center).marginRight(15.0).size(CGSize(width: 30.0, height: 30.0))
+    
         self.tableViewHeader.pin.below(of: self.navigationBarView).horizontally().height(44.0)
         self.tableView.pin.below(of: self.tableViewHeader).horizontally().bottom(66.0)
         self.confirmButton.pin.bottomCenter().marginBottom(10.0).minWidth(self.tableView.frame.width - 50.0).height(56.0)
