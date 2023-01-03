@@ -36,7 +36,8 @@ class StorageCell: UITableViewCell {
     
     let rx = Observable()
     
-    var disposeBag = DisposeBag()
+    var cellDisposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: MyStorageCell.reuseIdentifier)
@@ -44,12 +45,32 @@ class StorageCell: UITableViewCell {
         self.showsReorderControl = true
         
         self.setUI()
+        self.subscribeRx()
+    }
+    
+    private func subscribeRx() {
+        
+        self.minusButton.rx.tap
+            .bind(with: self, onNext: { (owner, _) in
+                guard let quantity = Int(owner.quantity ?? ""), (quantity - 1) >= 0 else { return }
+            
+                self.rx.changeQuantity.accept(quantity - 1)
+            })
+            .disposed(by: self.disposeBag)
+        
+        self.plusButton.rx.tap
+            .bind(with: self, onNext: { (owner, _) in
+                guard let quantity = Int(owner.quantity ?? "") else { return }
+                
+                owner.rx.changeQuantity.accept(quantity + 1)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.disposeBag = DisposeBag()
+        self.cellDisposeBag = DisposeBag()
     }
     
     private func setUI() {

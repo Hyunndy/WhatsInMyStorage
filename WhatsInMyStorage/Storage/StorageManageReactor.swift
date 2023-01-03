@@ -20,11 +20,13 @@ class StorageManageReactor: Reactor {
         case deleteTask(IndexPath)
         /// add
         case openAddPopup
-        case addTask([MyStorageSectionData], MyStorageSectionData)
+        case addTask(MyStorageSectionData)
         /// edit
         case editTask(Bool)
         /// expand / unexpand Cells
         case expandSectionRows(Int)
+        /// cell Action
+        case cellAddTask(IndexPath, Int)
     }
 
     enum Mutation {
@@ -36,6 +38,8 @@ class StorageManageReactor: Reactor {
         /// expand / unexpand Cells
         case setExpandedSectionSet(Set<Int>)
         case reloadSection(Int)
+        /// Cell Action
+//        case reloadRow(IndexPath)
     }
     
     struct State {
@@ -60,9 +64,9 @@ class StorageManageReactor: Reactor {
                 self.getStorageData(page: 1)
                     .map { Mutation.setStorages($0) }
             ])
-        case .addTask(let currentSectionData, let addedSectionData):
+        case .addTask(let addedSectionData):
             return Observable.concat([
-                self.addStorageData(currentData: currentSectionData, addedData: addedSectionData)
+                self.addStorageData(addedData: addedSectionData)
                     .map { Mutation.setStorages($0)}
             ])
         case .editTask(let isEditing):
@@ -88,6 +92,11 @@ class StorageManageReactor: Reactor {
         case .deleteTask(let indexPath):
             return Observable.concat([
                 self.deleteStorageData(indexPath: indexPath)
+                    .map { Mutation.setStorages($0) }
+            ])
+        case .cellAddTask(let indexPath, let quantity):
+            return Observable.concat([
+                self.changeStorageData(indexPath: indexPath, quantity: quantity)
                     .map { Mutation.setStorages($0) }
             ])
         }
@@ -148,12 +157,12 @@ extension StorageManageReactor {
         return Observable.just(intialSectionData)
     }
     
-    private func addStorageData(currentData: [MyStorageSectionData], addedData: MyStorageSectionData) -> Observable<[MyStorageSectionData]> {
+    private func addStorageData(addedData: MyStorageSectionData) -> Observable<[MyStorageSectionData]> {
         
-        var convertedStorageData = currentData
+        var convertedStorageData = self.currentState.storages
         
         // 현재 있는 섹션인지 찾기
-        if let idx = currentData.firstIndex(where: { $0.header == addedData.header }) {
+        if let idx = self.currentState.storages.firstIndex(where: { $0.header == addedData.header }) {
             
             // 있는 아이템인지도 찾기
             if let itemIdx = convertedStorageData[idx].items.firstIndex(where: { $0.product == addedData.items[0].product }) {
@@ -194,6 +203,22 @@ extension StorageManageReactor {
         
         // 현재 섹션의 아이템 제거
         currentSection.items.remove(at: indexPath.row)
+        
+        // 섹션 업데이트!
+        sectionDataArray[indexPath.section] = currentSection
+        
+        return Observable.just(sectionDataArray)
+    }
+    
+    private func changeStorageData(indexPath: IndexPath, quantity: Int) -> Observable<[MyStorageSectionData]> {
+        
+        var sectionDataArray = self.currentState.storages
+        
+        // 현재 섹션
+        var currentSection = sectionDataArray[indexPath.section]
+        
+        // 현재 섹션의 아이템 제거
+        currentSection.items[indexPath.row].quantity = quantity
         
         // 섹션 업데이트!
         sectionDataArray[indexPath.section] = currentSection

@@ -27,7 +27,6 @@ class StorageManageViewController: CustomNavigationViewController, View {
     // UI
     lazy var editButton: UIButton = {
         let button = UIButton().then {
-            $0.backgroundColor = .green
             $0.setTitle("편집", for: .normal)
             $0.titleLabel?.font = .systemFont(ofSize: 17.0, weight: .bold)
             $0.setTitleColor(UIColor.wms.green, for: .normal)
@@ -37,7 +36,6 @@ class StorageManageViewController: CustomNavigationViewController, View {
     
     lazy var addButton: UIButton = {
         let button = UIButton().then {
-            $0.backgroundColor = .green
             $0.setTitle("+", for: .normal)
             $0.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 3.0, right: 0.0)
             $0.titleLabel?.font = .systemFont(ofSize: 20.0, weight: .bold)
@@ -81,17 +79,24 @@ class StorageManageViewController: CustomNavigationViewController, View {
     
     lazy var dataSource: RxTableViewSectionedReloadDataSource<MyStorageSectionData>! = {
         return RxTableViewSectionedReloadDataSource<MyStorageSectionData> { [weak self] dataSource, tableView, indexPath, item in
-            guard let self else { return UITableViewCell() }
+            guard let self, let reactor = self.reactor else { return UITableViewCell() }
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "StorageCell", for: indexPath) as! StorageCell
             cell.selectionStyle = .none
+            
             /// @유현지 <궁금증>
             /// Cell안에 (-) (+) 버튼이 있고, 화면에 뿌려주는 StorageSectionData는 VC가 갖고있다.
             /// 따라서 Cell의 Reactor는 Action이 없고, Cell의 Action이 VC의 Reactor로 가야될 것 같은데
             /// ReactorKit에서는 Cell도 View라고 보고 Reacttor가 필요하다고 한다.
             cell.isExpandable = self.reactor?.currentState.expandedSectionSet.contains(indexPath.section) ?? false
             cell.configure(storage: item)
-        
+            
+            //TODO: @유현지 ReactorKit + Cell 학습 해보기
+            cell.rx.changeQuantity
+                .map { Reactor.Action.cellAddTask(indexPath, $0) }
+                .bind(to: reactor.action)
+                .disposed(by: cell.cellDisposeBag)
+            
             return cell
         }
     }()
@@ -244,7 +249,7 @@ class StorageManageViewController: CustomNavigationViewController, View {
         let StorageAddPopupViewController = StorageAddPopupViewController()
         
         StorageAddPopupViewController.rx.addedStorageData
-            .map { Reactor.Action.addTask(reactor.currentState.storages, $0) }
+            .map { Reactor.Action.addTask($0) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
