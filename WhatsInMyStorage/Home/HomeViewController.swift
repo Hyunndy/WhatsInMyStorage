@@ -42,15 +42,10 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.setNavigationBar()
         self.setUI()
         self.setRx()
         
         self.fetch.accept(())
-    }
-
-    func setNavigationBar() {
-        self.navigationController?.isNavigationBarHidden = true
     }
     
     func setUI() {

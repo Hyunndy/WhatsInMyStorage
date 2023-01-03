@@ -14,13 +14,12 @@ import RxDataSources
 import Then
 
 /*
- 
  ReactorKit
     - View: 오직 UI만, Action 방출
     - Reactor: 오직 Stream 방출
 
  */
-class StorageManageViewController: UIViewController, View {
+class StorageManageViewController: CustomNavigationViewController, View {
     
     typealias Reactor = StorageManageReactor
     var disposeBag = DisposeBag()
@@ -34,6 +33,11 @@ class StorageManageViewController: UIViewController, View {
     lazy var addButton: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
         return button
+    }()
+    
+    /// CustomNavigationBar를 하면 테이블뷰 header가 sticky 해지지 않는 이슈가 있어 따로 View로 뺀다.
+    lazy var tableViewHeader: MyStorageTableViewHeader = {
+        return  MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 44.0))
     }()
     
     lazy var tableView: UITableView = {
@@ -50,9 +54,6 @@ class StorageManageViewController: UIViewController, View {
             } else {
                 // Fallback on earlier versions
             }
-            
-            let header = MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 50.0))
-            $0.tableHeaderView = header
             
             $0.register(MyStorageTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier)
             $0.register(StorageCell.self, forCellReuseIdentifier: "StorageCell")
@@ -97,39 +98,46 @@ class StorageManageViewController: UIViewController, View {
     }
     
     override func loadView() {
-        self.view = UIView()
-    }
-    
-    private func setUI() {
-        self.view.addSubview(self.tableView)
-        self.view.addSubview(self.confirmButton)
-        
-        self.tableView.setEditing(false, animated: true)
-        
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.isNavigationBarHidden = false
-        
-        self.title = "재고 관리"
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-        self.navigationItem.rightBarButtonItems = [self.addButton, self.editButton]
-        
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        super.loadView()
         
         self.setUI()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    private func setUI() {
+        
+        self.view.backgroundColor = .white
+        
+        self.view.addSubview(self.tableViewHeader)
+        self.view.addSubview(self.tableView)
+        self.view.addSubview(self.confirmButton)
+        
+//        self.navigationItem.hidesBackButton = true
+//        self.navigationController?.isNavigationBarHidden = false
+//
+//        self.title = "재고 관리"
+//        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+//        self.navigationItem.rightBarButtonItems = [self.addButton, self.editButton]
+//
+//        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.title = "재고 관리"
+        self.tableView.setEditing(false, animated: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
         self.layout()
     }
     
     private func layout() {
-        self.tableView.pin.top(self.view.pin.safeArea.top).horizontally().bottom(66.0)
+//        self.tableView.pin.top(self.view.pin.safeArea.top).horizontally().bottom(66.0)
+        self.tableViewHeader.pin.below(of: self.navigationBarView).horizontally().height(44.0)
+        self.tableView.pin.below(of: self.tableViewHeader).horizontally().bottom(66.0)
         self.confirmButton.pin.bottomCenter().marginBottom(10.0).minWidth(self.tableView.frame.width - 50.0).height(56.0)
     }
     
@@ -252,7 +260,7 @@ extension StorageManageViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return (self.reactor?.currentState.storages.count ?? 0 > 0) ? 50.0 : .zero
+        return (self.reactor?.currentState.storages.count ?? 0 > 0) ? 44.0 : .zero
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
