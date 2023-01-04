@@ -1,5 +1,5 @@
 //
-//  MyStorageTableViewHeader.swift
+//  StorageTableViewHeader.swift
 //  WhatsInMyStorage
 //
 //  Created by hyunndy on 2022/11/12.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class MyStorageTableViewHeader: UIView {
+final class StorageTableViewHeader: UIView {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel().then {

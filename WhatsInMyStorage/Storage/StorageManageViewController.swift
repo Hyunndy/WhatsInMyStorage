@@ -45,8 +45,8 @@ class StorageManageViewController: CustomNavigationViewController, View {
     }()
     
     /// CustomNavigationBar를 하면 테이블뷰 header가 sticky 해지지 않는 이슈가 있어 따로 View로 뺀다.
-    lazy var tableViewHeader: MyStorageTableViewHeader = {
-        return  MyStorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 44.0))
+    lazy var tableViewHeader: StorageTableViewHeader = {
+        return  StorageTableViewHeader(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 44.0))
     }()
     
     lazy var tableView: UITableView = {
@@ -63,7 +63,7 @@ class StorageManageViewController: CustomNavigationViewController, View {
                 // Fallback on earlier versions
             }
             
-            $0.register(MyStorageTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier)
+            $0.register(StorageTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: StorageTableSectionHeaderView.reuseIdentifier)
             $0.register(StorageCell.self, forCellReuseIdentifier: "StorageCell")
         }
     }()
@@ -278,7 +278,7 @@ extension StorageManageViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyStorageTableSectionHeaderView.reuseIdentifier) as! MyStorageTableSectionHeaderView
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: StorageTableSectionHeaderView.reuseIdentifier) as! StorageTableSectionHeaderView
         
         if let reactor = self.reactor {
             header.title = reactor.currentState.storages[section].header

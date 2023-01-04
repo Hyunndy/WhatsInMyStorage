@@ -1,5 +1,5 @@
 //
-//  MyStorageTableSectionHeaderView.swift
+//  StorageTableSectionHeaderView.swift
 //  WhatsInMyStorage
 //
 //  Created by hyunndy on 2022/12/10.
@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class MyStorageTableSectionHeaderView: UITableViewHeaderFooterView {
+class StorageTableSectionHeaderView: UITableViewHeaderFooterView {
 
     static let reuseIdentifier = "MyStorageTableSectionHeader"
     
