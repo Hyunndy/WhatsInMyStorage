@@ -40,7 +40,7 @@ class StorageCell: UITableViewCell {
     private let disposeBag = DisposeBag()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: MyStorageCell.reuseIdentifier)
+        super.init(style: style, reuseIdentifier: StorageCell.reuseIdentifier)
         
         self.showsReorderControl = true
         

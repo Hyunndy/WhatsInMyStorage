@@ -27,6 +27,8 @@ class CustomNavigationViewController: UIViewController {
     override func loadView() {
         self.view = UIView()
         
+        self.view.backgroundColor = .white
+        
         self.view.addSubview(self.navigationBarView)
         self.navigationBarView.backgroundColor = .white
         

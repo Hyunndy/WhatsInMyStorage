@@ -17,7 +17,6 @@ import Then
  ReactorKit
     - View: 오직 UI만, Action 방출
     - Reactor: 오직 Stream 방출
-
  */
 class StorageManageViewController: CustomNavigationViewController, View {
     

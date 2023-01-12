@@ -22,11 +22,25 @@ protocol UIViewControllerDelegate {
 
 extension UIViewControllerDelegate {
     func setNavigationBar() { }
-    func setLayout() { }
     func setRx() { }
 }
 
-protocol ReactorViewControllerDelegate: UIViewControllerDelegate, View {
+// @유현지 pinLayout UI 세팅 프로토콜
+protocol UISettingDelegate {
+    /// loadView()
+    func setUI()
+    /// ViewDidLoad()
+    func setNavigationBar()
+    /// PinLayout - ViewWillLayoutSubviews()
+    func setLayout()
+}
+
+extension UISettingDelegate {
+    func setNavigationBar() { }
+    func setLayout() { }
+}
+
+protocol ReactorViewControllerDelegate: View {
     func bindAction(reactor: Reactor)
     func bindState(reactor: Reactor)
 }
