@@ -22,23 +22,21 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     func setUI() {
         
         self.view.addSubview(self.collectionView)
+        self.collectionView.backgroundColor = .white
         self.collectionView.register(RecipeCollectionViewCell.self, forCellWithReuseIdentifier: RecipeCollectionViewCell.identifier)
+        self.collectionView.collectionViewLayout = self.createLayout()
         
         // 1. Connect a diffable Datasource to your collection View
         // 2. Implement a cell Provider to configure your collection view's cell
         let cellRegistration = UICollectionView.CellRegistration<RecipeCollectionViewCell, Recipe> { cell, indexPath, recipe in
-            return cell.configure(name: recipe.name, price: recipe.price, image: recipe.image)
+            cell.configure(name: recipe.name, price: recipe.price, image: recipe.image)
         }
         
-        self.dataSource = UICollectionViewDiffableDataSource(collectionView: self.collectionView, cellProvider: { collectionView,indexPath,recipe in
+        self.dataSource = UICollectionViewDiffableDataSource(collectionView: self.collectionView, cellProvider: { collectionView,indexPath,recipe -> RecipeCollectionViewCell in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: recipe)
         })
         
-        // 3. Generate the current State of the data
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Recipe>()
-        snapshot.appendSections([.recipe])
-        snapshot.appendItems(self.recipeArray)
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+
         
         // 4. Display the data in the UI
         
@@ -63,8 +61,35 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
         self.setUI()
     }
     
+    func createLayout() -> UICollectionViewLayout {
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.5))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        group.interItemSpacing = .fixed(20.0)
+        group.contentInsets = .init(top: 10.0, leading: 20.0, bottom: 0.0, trailing: 20.0)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 0.0
+        section.contentInsets = .init(top: 0.0, leading: 0.0, bottom: 20.0, trailing: 0.0)
+        return UICollectionViewCompositionalLayout(section: section)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // 3. Generate the current State of the data
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Recipe>()
+        snapshot.appendSections([.recipe])
+        snapshot.appendItems(self.recipeArray)
+        self.dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.collectionView.pin.all()
     }
 }

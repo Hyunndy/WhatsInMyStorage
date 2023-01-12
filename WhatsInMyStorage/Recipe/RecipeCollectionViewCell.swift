@@ -25,21 +25,23 @@ class RecipeCollectionViewCell: UICollectionViewCell {
     
     private lazy var nameLabel: UILabel = {
         return UILabel().then {
-            $0.font = .boldSystemFont(ofSize: 10.0)
+            $0.font = .boldSystemFont(ofSize: 17.0)
             $0.textColor = .black
         }
     }()
     
     private lazy var priceLabel: UILabel = {
         return UILabel().then {
-            $0.font = .boldSystemFont(ofSize: 10.0)
+            $0.font = .boldSystemFont(ofSize: 17.0)
             $0.textColor = UIColor.wms.green
         }
     }()
     
     private lazy var imageView: UIImageView = {
         return UIImageView(frame: .zero).then {
-            $0.contentMode = .scaleToFill
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 15.0
         }
     }()
     
@@ -54,11 +56,10 @@ class RecipeCollectionViewCell: UICollectionViewCell {
         
         self.rootContainerView.flex.direction(.column).define { flex in
             
-            flex.addItem(self.imageView).grow(1).marginHorizontal(0.0)
+            flex.addItem(self.imageView).horizontally(0.0).height(70%)
             flex.addItem(self.nameLabel).marginTop(10.0)
-            flex.addItem(self.priceLabel).marginTop(10.0)
+            flex.addItem(self.priceLabel).marginTop(5.0)
         }
-        
         
         self.contentView.addSubview(self.rootContainerView)
     }
@@ -68,7 +69,7 @@ class RecipeCollectionViewCell: UICollectionViewCell {
         
         self.rootContainerView.pin.all()
         
-        self.rootContainerView.flex.layout(mode: .adjustHeight)
+        self.rootContainerView.flex.layout(mode: .fitContainer)
         
     }
     

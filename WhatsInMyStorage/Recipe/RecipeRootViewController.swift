@@ -56,7 +56,8 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
             let button = UIButton().then {
                 $0.setTitle(menu, for: .normal)
                 $0.tag = idx
-                $0.setTitleColor(.black, for: .normal)
+                $0.setTitleColor(UIColor.wms.deepGray, for: .normal)
+                $0.titleLabel?.font = .boldSystemFont(ofSize: 15.0)
             }
             
             self.segmentButtonArray.append(button)
@@ -68,7 +69,7 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
                 
                 let leftMargin = (idx == 0) ? 0.0 : 50.0
                 
-                flex.addItem(button).maxWidth(50.0).marginLeft(leftMargin)
+                flex.addItem(button).minWidth(20.0).marginLeft(leftMargin)
             }
         }
         
@@ -76,7 +77,22 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
         // << 버튼
         
         
-        // >> 
+        // >> 컨텐츠
+        self.view.addSubview(self.contentScrollViewContainer)
+        self.contentScrollViewContainer.backgroundColor = .green
+        self.contentScrollViewContainer.isPagingEnabled = true
+        
+        for _ in self.segmentMenuArray {
+            let contentViewController = RecipeChildViewController()
+            self.addChild(contentViewController)
+            self.contentRootContainer.flex.direction(.row).define { (flex) in
+                flex.addItem(contentViewController.view).width(UIScreen.main.bounds.width)
+            }
+            contentViewController.didMove(toParent: self)
+        }
+        
+        self.contentScrollViewContainer.addSubview(self.contentRootContainer)
+        // <<
     }
     
     func setLayout() {
@@ -92,6 +108,18 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
         
         // 3) Adjust the scrollView contentSize
         self.segmentScrollViewContainer.contentSize = self.segmentRootContainer.frame.size
+        // <<
+        
+        // >> 컨텐츠
+        // 1) Layout the scrollView & FlexRootContainer using PinLayout
+        self.contentScrollViewContainer.pin.below(of: self.segmentScrollViewContainer).marginTop(10.0).horizontally().bottom()
+        self.contentRootContainer.pin.all()
+        
+        // 2) Let the flexbox Container layout itself and adjust width or height
+        self.contentRootContainer.flex.layout(mode: .adjustWidth)
+        
+        // 3) Adjust the scrollView contentSize
+        self.contentScrollViewContainer.contentSize = self.contentRootContainer.frame.size
         // <<
     }
     
@@ -118,6 +146,7 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
         super.viewDidLoad()
 
         self.setNavigationBar()
+        self.segmentButtonArray[0].setUnderline()
     }
     
     override func viewDidLayoutSubviews() {
