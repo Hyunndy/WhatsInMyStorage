@@ -25,8 +25,6 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     }()
     var dataSource: UICollectionViewDiffableDataSource<Section, Recipe>?
     
-//    var recipeArray = [Recipe(name: "윌리도그", price: 6500, image: "kikiCake"), Recipe(name: "칠리도그", price: 7000, image: "kikiCake"), Recipe(name: "오레오크로플", price: 7000, image: "kikiCake")]
-    
     init(sortedBy: String?) {
         super.init(nibName: nil, bundle: nil)
         
@@ -65,7 +63,9 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     
     func bindState(reactor: RecipeReactor) {
         reactor.state.map { $0.recipeArray }
-            .map { $0.filter { $0.sortBy == self.sortedBy } }
+            .map {
+                return (self.sortedBy == "All") ? $0 : $0.filter { $0.sortBy == self.sortedBy }
+            }
             .bind(with: self, onNext: { (owner, recipe) in
                 
                 guard let dataSource = owner.dataSource else { return }

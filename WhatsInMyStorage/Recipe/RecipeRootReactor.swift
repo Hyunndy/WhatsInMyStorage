@@ -10,14 +10,31 @@ import RxRelay
 import RxSwift
 import ReactorKit
 
-//enum DataEvent {
-//    case updateRecipeData([Recipe])
-//}
-//
-//protocol RecipeDataProtocol {
-//    var recipeArray: BehaviorRelay<[Recipe]> { get }
-//    func updateRecipeArray(to array: [Recipe]) -> Observable<[Recipe]>
-//}
+enum UserEvent {
+    // 초기, 새로고침
+    case refresh([Recipe])
+    // 더하기
+    case add(Recipe)
+}
+
+protocol RecipeDataProtocol {
+    var event: PublishRelay<UserEvent> { get }
+    
+    func updateRecipeData(data: [Recipe])// -> Observable<[Recipe]>
+    func addRecipe(data: Recipe)// -> Observable<Recipe>
+}
+
+class RecipeDataService: RecipeDataProtocol {
+    let event = PublishRelay<UserEvent>()
+
+    func updateRecipeData(data: [Recipe]) {
+        event.accept(.refresh(data))
+    }
+    
+    func addRecipe(data: Recipe) {
+        event.accept(.add(data))
+    }
+}
 
 class RecipeRootReactor: Reactor {
     
@@ -37,9 +54,11 @@ class RecipeRootReactor: Reactor {
     }
     
     var initialState: State
+    let service: RecipeDataProtocol
     
-    init() {
+    init(service: RecipeDataProtocol) {
         self.initialState = State()
+        self.service = service
     }
     
     // Action -> Mutation
@@ -48,6 +67,8 @@ class RecipeRootReactor: Reactor {
         case .refresh:
             return self.fetchData()
                 .map { Mutation.updateRecipeArray($0) }
+//            return self.fetchData()
+//                .map { Mutation.updateRecipeArray($0) }
         }
     }
     
@@ -57,7 +78,8 @@ class RecipeRootReactor: Reactor {
         var recipeArray = [Recipe(name: "윌리도그2", price: 6500, image: "kikiCake", sortBy: "음료"), Recipe(name: "칠리도그2", price: 7000, image: "kikiCake", sortBy: "디저트"), Recipe(name: "오레오크로플2", price: 7000, image: "kikiCake", sortBy: "음료")]
         
         // 데이터 받아오기~
-        self.recipeArray.accept(recipeArray)
+//        self.recipeArray.accept(recipeArray)
+        self.service.updateRecipeData(data: recipeArray)
         
         return Observable.just(true)
     }

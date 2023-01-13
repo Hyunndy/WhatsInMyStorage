@@ -18,6 +18,7 @@ class RecipeReactor: Reactor {
     
     enum Mutation {
         case refresh([Recipe])
+        case add(Recipe)
     }
     
     struct State {
@@ -26,11 +27,18 @@ class RecipeReactor: Reactor {
     
     var initialState: State
     
-    unowned var recipeRelay: PublishRelay<[Recipe]>!
+//    unowned var recipeRelay: PublishRelay<[Recipe]>!
+//
+//    init(recipeRelay: PublishRelay<[Recipe]>) {
+//        self.initialState = State(recipeArray: [Recipe]())
+//        self.recipeRelay = recipeRelay
+//    }
     
-    init(recipeRelay: PublishRelay<[Recipe]>) {
+    var service: RecipeDataProtocol
+    
+    init(service: RecipeDataProtocol) {
         self.initialState = State(recipeArray: [Recipe]())
-        self.recipeRelay = recipeRelay
+        self.service = service
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -43,12 +51,25 @@ class RecipeReactor: Reactor {
         switch mutation {
         case .refresh(let array):
             newState.recipeArray = array
+        default:
+            break
         }
         
         return newState
     }
     
     func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
-        return Observable.merge(mutation, recipeRelay.map { Mutation.refresh($0) })
+        let eventMutation = service.event.flatMap { event -> Observable<Mutation> in
+            switch event {
+            case .refresh(let recipeArray):
+                return Observable.just(.refresh(recipeArray))
+            case .add(let recipe):
+                return Observable.just(.add(recipe))
+            }
+        }
+        
+        return Observable.merge(mutation, eventMutation)
+        
+//        return Observable.merge(mutation, recipeRelay.map { Mutation.refresh($0) })
     }
 }

@@ -95,7 +95,8 @@ class RecipeRootViewController: CustomNavigationViewController, UISettingDelegat
         
         for menu in self.segmentMenuArray {
             let contentViewController = RecipeChildViewController(sortedBy: menu)
-            contentViewController.reactor = RecipeReactor(recipeRelay: self.reactor!.recipeArray)
+//            contentViewController.reactor = RecipeReactor(recipeRelay: self.reactor!.recipeArray)
+            contentViewController.reactor = RecipeReactor(service: self.reactor!.service)
             
             self.addChild(contentViewController)
             self.contentRootContainer.flex.direction(.row).define { (flex) in
