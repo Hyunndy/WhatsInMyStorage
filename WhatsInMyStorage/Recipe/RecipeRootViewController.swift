@@ -11,10 +11,11 @@ import RxSwift
 import FlexLayout
 import Then
 
-class RecipeRootViewController: CustomNavigationViewController, ReactorViewControllerDelegate, UISettingDelegate {
-    
-    typealias Reactor = RecipeReactor
+class RecipeRootViewController: CustomNavigationViewController, UISettingDelegate, ReactorViewControllerDelegate {
+
     var disposeBag = DisposeBag()
+    
+    typealias Reactor = RecipeRootReactor
     
     lazy var searchBar: UISearchBar = {
          return UISearchBar().then {
@@ -41,6 +42,16 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
     let contentScrollViewContainer = UIScrollView()
     let contentRootContainer = UIView()
     // <<
+    
+    init(reactor: Reactor) {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.reactor = reactor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func setNavigationBar() {
         self.title = "레시피"
@@ -82,8 +93,10 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
         self.contentScrollViewContainer.backgroundColor = .green
         self.contentScrollViewContainer.isPagingEnabled = true
         
-        for _ in self.segmentMenuArray {
-            let contentViewController = RecipeChildViewController()
+        for menu in self.segmentMenuArray {
+            let contentViewController = RecipeChildViewController(sortedBy: menu)
+            contentViewController.reactor = RecipeReactor(recipeRelay: self.reactor!.recipeArray)
+            
             self.addChild(contentViewController)
             self.contentRootContainer.flex.direction(.row).define { (flex) in
                 flex.addItem(contentViewController.view).width(UIScreen.main.bounds.width)
@@ -123,19 +136,6 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
         // <<
     }
     
-    func bindAction(reactor: RecipeReactor) {
-        
-    }
-    
-    func bindState(reactor: RecipeReactor) {
-        
-    }
-    
-    func bind(reactor: RecipeReactor) {
-        self.bindAction(reactor: reactor)
-        self.bindState(reactor: reactor)
-    }
-    
     override func loadView() {
         super.loadView()
         
@@ -153,5 +153,25 @@ class RecipeRootViewController: CustomNavigationViewController, ReactorViewContr
         super.viewDidLayoutSubviews()
         
         self.setLayout()
+    }
+    
+    
+    func bindAction(reactor: RecipeRootReactor) {
+        
+        self.rx.viewDidLoad
+            .map { Reactor.Action.refresh }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        
+    }
+    
+    func bindState(reactor: RecipeRootReactor) {
+        
+    }
+    
+    func bind(reactor: RecipeRootReactor) {
+        self.bindAction(reactor: reactor)
+        self.bindState(reactor: reactor)
     }
 }

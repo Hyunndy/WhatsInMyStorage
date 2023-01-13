@@ -15,4 +15,5 @@ struct Recipe: Hashable, Equatable {
     var name: String
     var price: Int
     var image: String
+    var sortBy: String
 }

@@ -9,22 +9,37 @@ import UIKit
 import RxSwift
 
 class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate, UISettingDelegate {
-
+    
+    /// 데이터 나누는 기준
+    public private(set) var sortedBy: String?
+    
     typealias Reactor = RecipeReactor
     
     var disposeBag = DisposeBag()
     
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-    var dataSource: UICollectionViewDiffableDataSource<Section, Recipe>!
+    lazy var collectionView: UICollectionView = {
+        return UICollectionView(frame: .zero, collectionViewLayout: self.createLayout()).then {
+            $0.backgroundColor = .white
+            $0.register(RecipeCollectionViewCell.self, forCellWithReuseIdentifier: RecipeCollectionViewCell.identifier)
+        }
+    }()
+    var dataSource: UICollectionViewDiffableDataSource<Section, Recipe>?
     
-    var recipeArray = [Recipe(name: "윌리도그", price: 6500, image: "kikiCake"), Recipe(name: "칠리도그", price: 7000, image: "kikiCake"), Recipe(name: "오레오크로플", price: 7000, image: "kikiCake")]
+//    var recipeArray = [Recipe(name: "윌리도그", price: 6500, image: "kikiCake"), Recipe(name: "칠리도그", price: 7000, image: "kikiCake"), Recipe(name: "오레오크로플", price: 7000, image: "kikiCake")]
+    
+    init(sortedBy: String?) {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.sortedBy = sortedBy
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func setUI() {
         
         self.view.addSubview(self.collectionView)
-        self.collectionView.backgroundColor = .white
-        self.collectionView.register(RecipeCollectionViewCell.self, forCellWithReuseIdentifier: RecipeCollectionViewCell.identifier)
-        self.collectionView.collectionViewLayout = self.createLayout()
         
         // 1. Connect a diffable Datasource to your collection View
         // 2. Implement a cell Provider to configure your collection view's cell
@@ -35,9 +50,6 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
         self.dataSource = UICollectionViewDiffableDataSource(collectionView: self.collectionView, cellProvider: { collectionView,indexPath,recipe -> RecipeCollectionViewCell in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: recipe)
         })
-        
-
-        
         // 4. Display the data in the UI
         
     }
@@ -52,6 +64,19 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     }
     
     func bindState(reactor: RecipeReactor) {
+        reactor.state.map { $0.recipeArray }
+            .map { $0.filter { $0.sortBy == self.sortedBy } }
+            .bind(with: self, onNext: { (owner, recipe) in
+                
+                guard let dataSource = owner.dataSource else { return }
+                
+                // 3. Generate the current State of the data
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Recipe>()
+                snapshot.appendSections([.recipe])
+                snapshot.appendItems(recipe)
+                dataSource.apply(snapshot, animatingDifferences: true)
+            })
+            .disposed(by: self.disposeBag)
         
     }
     
@@ -80,11 +105,11 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 3. Generate the current State of the data
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Recipe>()
-        snapshot.appendSections([.recipe])
-        snapshot.appendItems(self.recipeArray)
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+//        // 3. Generate the current State of the data
+//        var snapshot = NSDiffableDataSourceSnapshot<Section, Recipe>()
+//        snapshot.appendSections([.recipe])
+//        snapshot.appendItems(self.recipeArray)
+//        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     override func viewDidLayoutSubviews() {

@@ -73,7 +73,7 @@ final class HomeRootViewController: UIViewController, UIViewControllerDelegate {
             .bind(onNext: { [weak self] in
                 guard let self else { return }
                 
-                let myStorageViewController = RecipeRootViewController()
+                let myStorageViewController = RecipeRootViewController(reactor: RecipeRootReactor())
                 myStorageViewController.hidesBottomBarWhenPushed = true
             
                 self.navigationController?.show(myStorageViewController, sender: nil)
