@@ -117,4 +117,10 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
         
         self.collectionView.pin.all()
     }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+    
+        self.view.endEditing(true)
+    }
 }

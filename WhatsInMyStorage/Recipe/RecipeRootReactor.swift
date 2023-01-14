@@ -47,13 +47,17 @@ class RecipeRootReactor: Reactor {
     
     enum Action {
         case refresh
+        case search(String?)
     }
     
     enum Mutation {
         case updateRecipeArray(Bool)
+        case playIndicator(Bool)
     }
     
     struct State {
+        // 인디케이터 on/off
+        var indicator: Bool = false
         var refreshSuccess: Bool = false
     }
     
@@ -71,6 +75,11 @@ class RecipeRootReactor: Reactor {
         case .refresh:
             return self.fetchData()
                 .map { Mutation.updateRecipeArray($0) }
+        case .search(let query):
+            return Observable.concat([
+                Observable.just(Mutation.playIndicator(true)),
+                self.search(query: query).map { Mutation.playIndicator($0) }
+            ])
         }
     }
     
@@ -85,12 +94,23 @@ class RecipeRootReactor: Reactor {
         return Observable.just(true)
     }
     
+    // 검색
+    private func search(query: String?) -> Observable<Bool> {
+        
+        // 검색 때리기!
+        self.service.searchRecipe(query: query)
+        
+        return Observable.just(false)
+    }
+    
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         
         switch mutation {
         case .updateRecipeArray(let success):
             newState.refreshSuccess = success
+        case .playIndicator(let doPlayIndicator):
+            newState.indicator = doPlayIndicator
         }
         
         return newState

@@ -174,6 +174,14 @@ final class RecipeRootViewController: CustomNavigationViewController, UISettingD
             .map { Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
+        
+        // 검색창
+        self.searchBar.rx.text
+            .skip(1)
+            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+            .map { Reactor.Action.search($0) }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
     
     func bindState(reactor: RecipeRootReactor) { }
@@ -188,6 +196,11 @@ final class RecipeRootViewController: CustomNavigationViewController, UISettingD
         self.segmentButtonArray[idx2].setUnderline()
     }
 
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        self.view.endEditing(true)
+    }
 }
 
 extension RecipeRootViewController: UIScrollViewDelegate {

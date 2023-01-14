@@ -19,6 +19,7 @@ class RecipeReactor: Reactor {
     enum Mutation {
         case refresh([Recipe])
         case add(Recipe)
+        case search(String?)
     }
     
     struct State {
@@ -44,7 +45,15 @@ class RecipeReactor: Reactor {
         
         switch mutation {
         case .refresh(let array):
+            // 리프레시 후에는 initaliState에 저장해둔다.
+            self.initialState.recipeArray = array
             newState.recipeArray = array
+        case .search(let query):
+            if let query, query.isEmpty == false {
+                newState.recipeArray = initialState.recipeArray.filter { $0.name.contains(query) }
+            } else {
+                newState.recipeArray = initialState.recipeArray
+            }
         default:
             break
         }
@@ -59,6 +68,8 @@ class RecipeReactor: Reactor {
                 return Observable.just(.refresh(recipeArray))
             case .add(let recipe):
                 return Observable.just(.add(recipe))
+            case .search(let query):
+                return Observable.just(.search(query))
             default:
                 return Observable.just(.refresh([Recipe]()))
             }
