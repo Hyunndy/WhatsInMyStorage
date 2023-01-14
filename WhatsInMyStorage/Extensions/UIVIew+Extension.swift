@@ -30,4 +30,13 @@ extension UIButton {
         attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: title.count))
         setAttributedTitle(attributedString, for: .normal)
     }
+    
+    func removeUnderline() {
+        guard let title = title(for: .normal) else { return }
+        
+        let attributedString = NSMutableAttributedString(string: title)
+        attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 15.0), range: NSRange(location: 0, length: title.count))
+        attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: title.count))
+        setAttributedTitle(attributedString, for: .normal)
+    }
 }

@@ -11,7 +11,7 @@ import RxSwift
 import FlexLayout
 import Then
 
-class RecipeRootViewController: CustomNavigationViewController, UISettingDelegate, ReactorViewControllerDelegate {
+final class RecipeRootViewController: CustomNavigationViewController, UISettingDelegate, ReactorViewControllerDelegate {
 
     var disposeBag = DisposeBag()
     
@@ -36,6 +36,13 @@ class RecipeRootViewController: CustomNavigationViewController, UISettingDelegat
     let segmentRootContainer = UIView()
     let segmentMenuArray = ["All", "음료", "디저트", "식사", "옴뇸뇸"]
     var segmentButtonArray = [UIButton]()
+    
+    private var selectedSegmentIdx: Int = 0 {
+        willSet {
+            self.changeSelectedSegmentIdx(from: selectedSegmentIdx, to: newValue)
+        }
+    }
+    
     // <<
     
     // >> 레시피 뷰
@@ -57,6 +64,14 @@ class RecipeRootViewController: CustomNavigationViewController, UISettingDelegat
         self.title = "레시피"
     }
     
+    
+    @objc func segmentButtonSelected(_ sender: UIButton) {
+        
+        self.selectedSegmentIdx = sender.tag
+        
+        self.contentScrollViewContainer.contentOffset.x = (UIScreen.main.bounds.width * CGFloat(self.selectedSegmentIdx))
+    }
+    
     func setUI() {
         self.view.addSubview(self.searchBar)
         
@@ -69,33 +84,31 @@ class RecipeRootViewController: CustomNavigationViewController, UISettingDelegat
                 $0.tag = idx
                 $0.setTitleColor(UIColor.wms.deepGray, for: .normal)
                 $0.titleLabel?.font = .boldSystemFont(ofSize: 15.0)
+                $0.addTarget(self, action: #selector(segmentButtonSelected(_:)), for: .touchUpInside)
             }
             
             self.segmentButtonArray.append(button)
         }
         
-        self.segmentRootContainer.flex.justifyContent(.center).paddingLeft(20.0).direction(.row).define { (flex) in
+        self.segmentRootContainer.flex.justifyContent(.center).paddingLeft(0.0).direction(.row).define { (flex) in
             
             for (idx, button) in self.segmentButtonArray.enumerated() {
-                
-                let leftMargin = (idx == 0) ? 0.0 : 50.0
-                
-                flex.addItem(button).minWidth(20.0).marginLeft(leftMargin)
+            
+                flex.addItem(button).minWidth(button.intrinsicContentSize.width + 50.0)
             }
         }
         
         self.segmentScrollViewContainer.addSubview(self.segmentRootContainer)
         // << 버튼
         
-        
         // >> 컨텐츠
         self.view.addSubview(self.contentScrollViewContainer)
         self.contentScrollViewContainer.backgroundColor = .green
         self.contentScrollViewContainer.isPagingEnabled = true
+        self.contentScrollViewContainer.delegate = self
         
         for menu in self.segmentMenuArray {
             let contentViewController = RecipeChildViewController(sortedBy: menu)
-//            contentViewController.reactor = RecipeReactor(recipeRelay: self.reactor!.recipeArray)
             contentViewController.reactor = RecipeReactor(service: self.reactor!.service)
             
             self.addChild(contentViewController)
@@ -152,27 +165,42 @@ class RecipeRootViewController: CustomNavigationViewController, UISettingDelegat
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+    
         self.setLayout()
     }
     
-    
     func bindAction(reactor: RecipeRootReactor) {
-        
         self.rx.viewDidLoad
             .map { Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
-        
-        
     }
     
-    func bindState(reactor: RecipeRootReactor) {
-        
-    }
+    func bindState(reactor: RecipeRootReactor) { }
     
     func bind(reactor: RecipeRootReactor) {
         self.bindAction(reactor: reactor)
         self.bindState(reactor: reactor)
+    }
+    
+    private func changeSelectedSegmentIdx(from idx: Int, to idx2: Int) {
+        self.segmentButtonArray[idx].removeUnderline()
+        self.segmentButtonArray[idx2].setUnderline()
+    }
+
+}
+
+extension RecipeRootViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        // 스크롤 뷰 오프셋
+        let contentOffset = scrollView.contentOffset.x
+        // 스크린 사이즈
+        let screenSize = UIScreen.main.bounds.size.width
+        // 현재 오프셋 인덱스
+        let currentScrollIdx = Int(contentOffset / screenSize)
+        
+        self.selectedSegmentIdx = currentScrollIdx
     }
 }

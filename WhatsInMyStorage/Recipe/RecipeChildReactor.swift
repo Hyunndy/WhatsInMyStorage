@@ -27,13 +27,6 @@ class RecipeReactor: Reactor {
     
     var initialState: State
     
-//    unowned var recipeRelay: PublishRelay<[Recipe]>!
-//
-//    init(recipeRelay: PublishRelay<[Recipe]>) {
-//        self.initialState = State(recipeArray: [Recipe]())
-//        self.recipeRelay = recipeRelay
-//    }
-    
     var service: RecipeDataProtocol
     
     init(service: RecipeDataProtocol) {
@@ -42,6 +35,7 @@ class RecipeReactor: Reactor {
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
+        
         
     }
     
@@ -65,11 +59,11 @@ class RecipeReactor: Reactor {
                 return Observable.just(.refresh(recipeArray))
             case .add(let recipe):
                 return Observable.just(.add(recipe))
+            default:
+                return Observable.just(.refresh([Recipe]()))
             }
         }
         
         return Observable.merge(mutation, eventMutation)
-        
-//        return Observable.merge(mutation, recipeRelay.map { Mutation.refresh($0) })
     }
 }

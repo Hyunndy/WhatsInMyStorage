@@ -15,13 +15,16 @@ enum UserEvent {
     case refresh([Recipe])
     // 더하기
     case add(Recipe)
+    // 찾기
+    case search(String?)
 }
 
 protocol RecipeDataProtocol {
     var event: PublishRelay<UserEvent> { get }
     
-    func updateRecipeData(data: [Recipe])// -> Observable<[Recipe]>
-    func addRecipe(data: Recipe)// -> Observable<Recipe>
+    func updateRecipeData(data: [Recipe])
+    func addRecipe(data: Recipe)
+    func searchRecipe(query: String?)
 }
 
 class RecipeDataService: RecipeDataProtocol {
@@ -34,12 +37,13 @@ class RecipeDataService: RecipeDataProtocol {
     func addRecipe(data: Recipe) {
         event.accept(.add(data))
     }
+    
+    func searchRecipe(query: String?) {
+        event.accept(.search(query))
+    }
 }
 
 class RecipeRootReactor: Reactor {
-    
-    /// child와 공유하는 Global State
-    var recipeArray = PublishRelay<[Recipe]>()
     
     enum Action {
         case refresh
@@ -67,18 +71,15 @@ class RecipeRootReactor: Reactor {
         case .refresh:
             return self.fetchData()
                 .map { Mutation.updateRecipeArray($0) }
-//            return self.fetchData()
-//                .map { Mutation.updateRecipeArray($0) }
         }
     }
     
     /// 데이터 받아오고 성공/실패를 리턴한다.
-    private func fetchData() -> Observable<Bool>{
+    private func fetchData() -> Observable<Bool> {
         
         var recipeArray = [Recipe(name: "윌리도그2", price: 6500, image: "kikiCake", sortBy: "음료"), Recipe(name: "칠리도그2", price: 7000, image: "kikiCake", sortBy: "디저트"), Recipe(name: "오레오크로플2", price: 7000, image: "kikiCake", sortBy: "음료")]
         
         // 데이터 받아오기~
-//        self.recipeArray.accept(recipeArray)
         self.service.updateRecipeData(data: recipeArray)
         
         return Observable.just(true)
@@ -95,5 +96,3 @@ class RecipeRootReactor: Reactor {
         return newState
     }
 }
-
-
