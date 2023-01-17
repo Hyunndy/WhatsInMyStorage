@@ -58,7 +58,14 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     }
     
     func bindAction(reactor: RecipeReactor) {
-        
+    
+        /// View
+        self.collectionView.rx.itemSelected
+            .subscribe(with: self, onNext: { (owner, indexPath) in
+                
+                owner.navigationController?.pushViewController(RecipeDetailViewController(), animated: true)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     func bindState(reactor: RecipeReactor) {
@@ -104,12 +111,8 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
-//        // 3. Generate the current State of the data
-//        var snapshot = NSDiffableDataSourceSnapshot<Section, Recipe>()
-//        snapshot.appendSections([.recipe])
-//        snapshot.appendItems(self.recipeArray)
-//        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     override func viewDidLayoutSubviews() {

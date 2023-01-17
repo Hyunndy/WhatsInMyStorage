@@ -14,6 +14,7 @@
 		024618BA29479CD0001E2096 /* StorageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024618B929479CD0001E2096 /* StorageCell.swift */; };
 		024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */; };
 		024B3E682923B24500D79A04 /* ReactorKitPracticeReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */; };
+		025504ED29769C3700F8B90A /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */; };
 		025921EE2962F72F008F8A81 /* UIVIew+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025921ED2962F72F008F8A81 /* UIVIew+Extension.swift */; };
 		02612DA2291E7E6300E9C36E /* StorageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612DA1291E7E6300E9C36E /* StorageInfo.swift */; };
 		02612DA4291FAC5300E9C36E /* StorageTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612DA3291FAC5200E9C36E /* StorageTableViewHeader.swift */; };
@@ -55,6 +56,7 @@
 		024618B929479CD0001E2096 /* StorageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageCell.swift; sourceTree = "<group>"; };
 		024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeViewController.swift; sourceTree = "<group>"; };
 		024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeReactor.swift; sourceTree = "<group>"; };
+		025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
 		025921ED2962F72F008F8A81 /* UIVIew+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+Extension.swift"; sourceTree = "<group>"; };
 		02612DA1291E7E6300E9C36E /* StorageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageInfo.swift; sourceTree = "<group>"; };
 		02612DA3291FAC5200E9C36E /* StorageTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTableViewHeader.swift; sourceTree = "<group>"; };
@@ -108,13 +110,9 @@
 		020657562935145E0035FC2D /* Recipe */ = {
 			isa = PBXGroup;
 			children = (
+				025504EB29769C0500F8B90A /* Detail */,
+				025504EA29769BFB00F8B90A /* Home */,
 				02732759296FF15A00DF5331 /* Empty.md */,
-				0273275A296FF51800DF5331 /* RecipeRootViewController.swift */,
-				0273275C296FF56B00DF5331 /* RecipeChildReactor.swift */,
-				0273276029700DCA00DF5331 /* RecipeChildViewController.swift */,
-				0273276229700F5700DF5331 /* Model.swift */,
-				027327642970128500DF5331 /* RecipeCollectionViewCell.swift */,
-				02079E2E297191560082B5EE /* RecipeRootReactor.swift */,
 			);
 			path = Recipe;
 			sourceTree = "<group>";
@@ -126,6 +124,27 @@
 				024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */,
 			);
 			path = ReactorKitPractice;
+			sourceTree = "<group>";
+		};
+		025504EA29769BFB00F8B90A /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				0273275A296FF51800DF5331 /* RecipeRootViewController.swift */,
+				0273275C296FF56B00DF5331 /* RecipeChildReactor.swift */,
+				0273276029700DCA00DF5331 /* RecipeChildViewController.swift */,
+				0273276229700F5700DF5331 /* Model.swift */,
+				027327642970128500DF5331 /* RecipeCollectionViewCell.swift */,
+				02079E2E297191560082B5EE /* RecipeRootReactor.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		025504EB29769C0500F8B90A /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		02612DA0291E7E5600E9C36E /* Data */ = {
@@ -427,6 +446,7 @@
 				02B9F79B290ED416005973AE /* AppDelegate.swift in Sources */,
 				0267DBF32917F27800F257AD /* HomeViewController.swift in Sources */,
 				02612DA2291E7E6300E9C36E /* StorageInfo.swift in Sources */,
+				025504ED29769C3700F8B90A /* RecipeDetailViewController.swift in Sources */,
 				02C53F1E29115D6C00974031 /* ProtocolManager.swift in Sources */,
 				0267DBFE2918011400F257AD /* HomeReactor.swift in Sources */,
 				0273276329700F5700DF5331 /* Model.swift in Sources */,
