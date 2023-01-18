@@ -225,7 +225,7 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.headerView.pin.below(of: self.navigationBarView).horizontally()
+        self.headerView.pin.below(of: self.navigationBarView).horizontally().width(100%).sizeToFit(.width)
         self.collectionView.pin.below(of: self.headerView).horizontally().bottom()
     }
 }

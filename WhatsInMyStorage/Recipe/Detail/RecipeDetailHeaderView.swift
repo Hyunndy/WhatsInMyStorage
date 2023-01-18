@@ -51,13 +51,15 @@ class RecipeDetailHeaderView: UIView {
             flex.addItem(self.imageView).height(200.0).width(200.0)
             
             // Info row
-//            flex.addItem().direction(.row).padding(6.0).define { (flex) in
-//                flex.addItem(self.nameLabel)
-//                flex.addItem(self.priceLabel)
-//            }
+            flex.addItem().direction(.row).padding(6.0).grow(1).define { (flex) in
+                flex.addItem(self.nameLabel)
+                flex.addItem(self.priceLabel)
+            }
         }
         
         self.addSubview(self.flexRootContainer)
+        
+//        self.addSubview(self.imageView)
     }
     
     override func layoutSubviews() {
@@ -66,11 +68,16 @@ class RecipeDetailHeaderView: UIView {
         self.layout()
     }
     
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        self.layout()
+        return self.flexRootContainer.frame.size
+//        return CGSize(width: UIScreen.main.bounds.width, height: self.imageView.frame.maxY + self.nameLabel.frame.maxY)
+    }
+    
     func layout() {
         
-        self.flexRootContainer.pin.all()
-        
-        self.flexRootContainer.flex.layout(mode: .adjustWidth)
+        self.flexRootContainer.pin.all().width(100%)
+        self.flexRootContainer.flex.layout(mode: .adjustHeight)
     }
     
     required init?(coder: NSCoder) {
