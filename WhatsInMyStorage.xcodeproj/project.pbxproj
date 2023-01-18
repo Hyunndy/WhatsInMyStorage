@@ -15,6 +15,7 @@
 		024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */; };
 		024B3E682923B24500D79A04 /* ReactorKitPracticeReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */; };
 		025504ED29769C3700F8B90A /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */; };
+		025504EF2978353700F8B90A /* RecipeDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025504EE2978353700F8B90A /* RecipeDetailHeaderView.swift */; };
 		025921EE2962F72F008F8A81 /* UIVIew+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025921ED2962F72F008F8A81 /* UIVIew+Extension.swift */; };
 		02612DA2291E7E6300E9C36E /* StorageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612DA1291E7E6300E9C36E /* StorageInfo.swift */; };
 		02612DA4291FAC5300E9C36E /* StorageTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02612DA3291FAC5200E9C36E /* StorageTableViewHeader.swift */; };
@@ -57,6 +58,7 @@
 		024B3E622923AD0500D79A04 /* ReactorKitPracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeViewController.swift; sourceTree = "<group>"; };
 		024B3E672923B24500D79A04 /* ReactorKitPracticeReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorKitPracticeReactor.swift; sourceTree = "<group>"; };
 		025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
+		025504EE2978353700F8B90A /* RecipeDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailHeaderView.swift; sourceTree = "<group>"; };
 		025921ED2962F72F008F8A81 /* UIVIew+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+Extension.swift"; sourceTree = "<group>"; };
 		02612DA1291E7E6300E9C36E /* StorageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageInfo.swift; sourceTree = "<group>"; };
 		02612DA3291FAC5200E9C36E /* StorageTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTableViewHeader.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */,
+				025504EE2978353700F8B90A /* RecipeDetailHeaderView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				024618BA29479CD0001E2096 /* StorageCell.swift in Sources */,
 				02FBF12B2948DF9500DEA53C /* Reactive+Extension.swift in Sources */,
 				02B9F79F290ED416005973AE /* ViewController.swift in Sources */,
+				025504EF2978353700F8B90A /* RecipeDetailHeaderView.swift in Sources */,
 				02C53F252911613400974031 /* PropertyWrapper.swift in Sources */,
 				025921EE2962F72F008F8A81 /* UIVIew+Extension.swift in Sources */,
 				02B9F79B290ED416005973AE /* AppDelegate.swift in Sources */,

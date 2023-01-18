@@ -122,6 +122,10 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     
     typealias DataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>
     
+    lazy var headerView: RecipeDetailHeaderView = {
+        return RecipeDetailHeaderView()
+    }()
+    
     lazy var collectionView: UICollectionView = {
         return UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
     }()
@@ -176,6 +180,7 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     }
     
     func setUI() {
+        self.view.addSubview(self.headerView)
         self.view.addSubview(self.collectionView)
         
         self.collectionView.backgroundColor = .white
@@ -220,6 +225,7 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.collectionView.pin.below(of: self.navigationBarView).horizontally().bottom()
+        self.headerView.pin.below(of: self.navigationBarView).horizontally()
+        self.collectionView.pin.below(of: self.headerView).horizontally().bottom()
     }
 }
