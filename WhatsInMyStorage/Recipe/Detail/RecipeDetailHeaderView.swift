@@ -9,7 +9,7 @@ import UIKit
 import PinLayout
 import FlexLayout
 
-class RecipeDetailHeaderView: UIView {
+class RecipeDetailHeaderView: UICollectionReusableView {
     
     static let identifier = "RecipeDetailHeaderView"
     
@@ -28,7 +28,7 @@ class RecipeDetailHeaderView: UIView {
     lazy var nameLabel: UILabel = {
         return UILabel().then {
             $0.text = "이름"
-            $0.font = .boldSystemFont(ofSize: 10.0)
+            $0.font = .boldSystemFont(ofSize: 20.0)
             $0.textColor = .black
         }
     }()
@@ -36,7 +36,7 @@ class RecipeDetailHeaderView: UIView {
     lazy var priceLabel: UILabel = {
         return UILabel().then {
             $0.text = "가격"
-            $0.font = .boldSystemFont(ofSize: 10.0)
+            $0.font = .boldSystemFont(ofSize: 20.0)
             $0.textColor = .black
         }
     }()
@@ -78,6 +78,35 @@ class RecipeDetailHeaderView: UIView {
         
         self.flexRootContainer.pin.all().width(100%)
         self.flexRootContainer.flex.layout(mode: .adjustHeight)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class LineSeperatorFooterView: UICollectionReusableView {
+    
+    static let identifier = "LineSeperatorFooterView"
+    
+    private let lineView = UIView()
+    
+    override var backgroundColor: UIColor? {
+        didSet {
+            self.lineView.backgroundColor = backgroundColor
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.addSubview(self.lineView)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.lineView.pin.all().height(5.0)
     }
     
     required init?(coder: NSCoder) {

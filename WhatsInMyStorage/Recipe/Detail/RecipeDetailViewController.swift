@@ -97,6 +97,7 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     enum Section: Int {
         case ingredient = 0
         case step = 1
+        case otherRecipe = 2
     }
     
     struct IngredientItem: Hashable {
@@ -119,12 +120,13 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     
     var ingredientData = [IngredientItem(name: "#매력적인"), IngredientItem(name: "#유명한"),IngredientItem(name: "#매력적인"), IngredientItem(name: "#유명한"),IngredientItem(name: "#매력적인"), IngredientItem(name: "#유명한"),IngredientItem(name: "#매력적인"), IngredientItem(name: "#유명한")]
     var recipeStepData = [recipeStepItem(description: "면을 삶으세요\n간장을 넣으세요"), recipeStepItem(description: "김치 넣으세요"), recipeStepItem(description: "면을 삶으세요"), recipeStepItem(description: "김치 넣으세요")]
+    var OtherRecipeArray = [Recipe(name: "윌리도그2", price: 6500, image: "kikiCake", sortBy: "음료"), Recipe(name: "칠리도그2", price: 7000, image: "kikiCake", sortBy: "디저트"), Recipe(name: "오레오크로플2", price: 7000, image: "kikiCake", sortBy: "음료")]
     
     typealias DataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>
     
-    lazy var headerView: RecipeDetailHeaderView = {
-        return RecipeDetailHeaderView()
-    }()
+//    lazy var headerView: RecipeDetailHeaderView = {
+//        return RecipeDetailHeaderView()
+//    }()
     
     lazy var collectionView: UICollectionView = {
         return UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
@@ -135,6 +137,12 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     private func getCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         
         let layout =  UICollectionViewCompositionalLayout(sectionProvider: { (sectionIdx, enviroment) in
+            
+            // 푸터
+            let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
+            let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+            sectionFooter.contentInsets = .init(top: 5.0, leading: 0.0, bottom: 0.0, trailing: 0.0)
+            
             switch sectionIdx {
             case Section.ingredient.rawValue:
                 // item
@@ -145,9 +153,27 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
                 let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(60.0), heightDimension: .absolute(32.0))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
+                // 헤더
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(250.0))
+                let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                
                 // section
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 6.0
+                section.orthogonalScrollingBehavior = .continuous
+                section.boundarySupplementaryItems = [sectionHeader, sectionFooter]
+                
+                return section
+            case Section.otherRecipe.rawValue:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = .init(top: 0.0, leading: 5.0, bottom: 0.0, trailing: 0.0)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .estimated(200.0))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 0.0
                 section.orthogonalScrollingBehavior = .continuous
                 return section
             default:
@@ -162,6 +188,7 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
                 // section
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 6.0
+                section.boundarySupplementaryItems = [sectionFooter]
                 return section
             }
         })
@@ -180,12 +207,16 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     }
     
     func setUI() {
-        self.view.addSubview(self.headerView)
+//        self.view.addSubview(self.headerView)
         self.view.addSubview(self.collectionView)
         
         self.collectionView.backgroundColor = .white
         self.collectionView.register(PracticeCollectionViewCell.self, forCellWithReuseIdentifier: PracticeCollectionViewCell.identifier)
         self.collectionView.register(PracticeCollectionViewCell2.self, forCellWithReuseIdentifier: PracticeCollectionViewCell2.identifier)
+        self.collectionView.register(RecipeDetailHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader , withReuseIdentifier: RecipeDetailHeaderView.identifier)
+        self.collectionView.register(LineSeperatorFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LineSeperatorFooterView.identifier)
+        self.collectionView.register(RecipeCollectionViewCell.self, forCellWithReuseIdentifier: RecipeCollectionViewCell.identifier)
+        
         let recipeCellRegistraion = UICollectionView.CellRegistration<PracticeCollectionViewCell, IngredientItem> { (cell, indexPath, ingredient) in
             cell.titleLabel.text = ingredient.name
         }
@@ -193,6 +224,18 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
         let stepCellRegistraion = UICollectionView.CellRegistration<PracticeCollectionViewCell2, recipeStepItem> { (cell, indexPath, step) in
             cell.titleLabel.text = step.description
         }
+        
+        let otherRecipeCellRegistration = UICollectionView.CellRegistration<RecipeCollectionViewCell, Recipe>   (handler: { (cell, indexPath, recipe) in
+            cell.configure(name: recipe.name, price: recipe.price, image: recipe.image)
+        })
+        
+        let headerViewRegistration = UICollectionView.SupplementaryRegistration<RecipeDetailHeaderView>(elementKind: UICollectionView.elementKindSectionHeader, handler: { (view, string, indexPath) in
+            view.nameLabel.text = "아이우에오"
+        })
+        
+        let footerViewRegistration = UICollectionView.SupplementaryRegistration<LineSeperatorFooterView>(elementKind: UICollectionView.elementKindSectionFooter, handler: { (view, string, IndexPath) in
+            view.backgroundColor = UIColor.wms.gray
+        })
 
         self.dataSource = DataSource(collectionView: self.collectionView, cellProvider: { (collectionView, indexPath, itemIdentifier) in
 
@@ -202,12 +245,27 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
             } else if let step = itemIdentifier as? recipeStepItem {
                 // 스텝 Cell
                 return collectionView.dequeueConfiguredReusableCell(using: stepCellRegistraion, for: indexPath, item: step)
-            }
-            
-            else {
+            } else if let otherRecipe = itemIdentifier as? Recipe {
+                // 다른 레시피 Cell
+                return collectionView.dequeueConfiguredReusableCell(using: otherRecipeCellRegistration, for: indexPath, item: otherRecipe)
+            } else {
                 return UICollectionViewCell()
             }
         })
+        
+        self.dataSource?.supplementaryViewProvider = { (collectionView, kind, indexPath) in
+
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerViewRegistration, for: indexPath)
+            case UICollectionView.elementKindSectionFooter:
+                
+                return collectionView.dequeueConfiguredReusableSupplementary(using: footerViewRegistration, for: indexPath)
+            default:
+                return nil
+            }
+        }
         
         self.collectionView.collectionViewLayout = self.getCollectionViewLayout()
     }
@@ -216,16 +274,18 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
         super.viewDidLoad()
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
-        snapshot.appendSections([.ingredient, .step])
+        snapshot.appendSections([.ingredient, .step, .otherRecipe])
         snapshot.appendItems(ingredientData, toSection: .ingredient)
         snapshot.appendItems(recipeStepData, toSection: .step)
+        snapshot.appendItems(OtherRecipeArray, toSection: .otherRecipe)
         self.dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.headerView.pin.below(of: self.navigationBarView).horizontally().width(100%).sizeToFit(.width)
-        self.collectionView.pin.below(of: self.headerView).horizontally().bottom()
+        //
+//        self.headerView.pin.below(of: self.navigationBarView).horizontally().width(100%).sizeToFit(.width)
+        self.collectionView.pin.below(of:self.navigationBarView).horizontally().bottom(10.0)
     }
 }

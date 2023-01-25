@@ -12,8 +12,14 @@ enum Section: CaseIterable {
 }
 
 struct Recipe: Hashable, Equatable {
+    let identifier = UUID()
+    
     var name: String
     var price: Int
     var image: String
     var sortBy: String
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
+    }
 }
