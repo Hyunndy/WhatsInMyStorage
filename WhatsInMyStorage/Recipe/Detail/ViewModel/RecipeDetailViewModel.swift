@@ -24,9 +24,6 @@ class RecipeDetailViewModel {
             if let recipes {
                 self.relay.accept([recipes])
             }
-        
-            
-            
         }
         
     }

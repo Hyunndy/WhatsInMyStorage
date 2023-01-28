@@ -192,7 +192,7 @@ final class RecipeRootViewController: CustomNavigationViewController, UISettingD
     }
     
     private func changeSelectedSegmentIdx(from idx: Int, to idx2: Int) {
-        self.segmentButtonArray[idx].removeUnderline()
+        self.segmentButtonArray[idx].removeUnderline(backTo: UIColor.wms.deepGray)
         self.segmentButtonArray[idx2].setUnderline()
     }
 
