@@ -96,32 +96,11 @@ class PracticeCollectionViewCell2: UICollectionViewCell {
     }
 }
 
-class RecipeDetailViewController: UIViewController, UISettingDelegate, ReactorViewControllerDelegate {
+class RecipeDetailViewController: UIViewController, UISettingDelegate {
     
     var disposeBag = DisposeBag()
     
-    typealias Reactor = RecipeDetailReactor
-    
-    func bind(reactor: RecipeDetailReactor) {
-        self.bindAction(reactor: reactor)
-        self.bindState(reactor: reactor)
-    }
-    
-    func bindAction(reactor: RecipeDetailReactor) {
-        
-        self.rx.viewDidLoad
-            .map { Reactor.Action.fetch }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-    }
-    
-    func bindState(reactor: RecipeDetailReactor) {
-        reactor.state
-            .map { $0.recipeDetail }
-            .subscribe {
-                print("씨발 \($0)")
-            }.disposed(by: self.disposeBag)
-    }
+    let viewModel = RecipeDetailViewModel()
     
     enum Section: Int {
         case ingredient = 0
@@ -322,7 +301,13 @@ class RecipeDetailViewController: UIViewController, UISettingDelegate, ReactorVi
         snapshot.appendItems(OtherRecipeArray, toSection: .otherRecipe)
         self.dataSource?.apply(snapshot, animatingDifferences: true)
         
-        print("viewDIdlLoad 불림")
+        self.viewModel.fetch()
+        
+        self.viewModel.relay
+            .subscribe({
+                print($0)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     override func viewDidLayoutSubviews() {

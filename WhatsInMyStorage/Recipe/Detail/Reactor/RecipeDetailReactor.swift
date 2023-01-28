@@ -30,13 +30,9 @@ class RecipeDetailReactor: Reactor {
         switch action {
         case .fetch:
             
-            Task {
-                print("fetch 들어왔음")
-                let model = try? await self.fetch()
-                return Observable.just(Mutation.fetch(model))
+            Task(priority: .high) {
+                return try await self.fetch()
             }
-        default:
-            break
         }
         
         return Observable.just(Mutation.nothing)
@@ -47,8 +43,10 @@ class RecipeDetailReactor: Reactor {
         
         switch mutation {
         case .fetch(let data):
+            print("페치데이터: \(data)")
             state.recipeDetail = data
         default:
+            print("두낫띵입니다.")
             break
         }
         
@@ -59,8 +57,18 @@ class RecipeDetailReactor: Reactor {
         return URL(string: "http://192.168.45.137:1337/api/recipe-details")!
     }
     
+    func fetch2() -> Observable<RecipeDetailModel?> {
+        return URLSession.shared.rx.data(request: URLRequest(url: self.url()))
+            .map { json -> RecipeDetailModel? in
+                let recipe = try JSONDecoder().decode(StrapiRecipeDetailContainerModel.self,    from: json)
+//
+                print(recipe.data[0])
+                return recipe.data[0]
+            }
+    }
+    
     // MARK: URLSession + async await 쓴 버전
-    func fetch() async throws -> RecipeDetailModel? {
+    func fetch() async throws -> Observable<Mutation> {
         
         /*
          public func data(from url: URL) async throws -> (Data, URLResponse)
@@ -71,8 +79,6 @@ class RecipeDetailReactor: Reactor {
             a.httpMethod = "GET"
             a.httpBody = Data()
             
-            
-            
             let (data, response) = try await URLSession.shared.data(for: a)
             
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { throw APIError.invaild }
@@ -81,15 +87,15 @@ class RecipeDetailReactor: Reactor {
             
             let recipe = try JSONDecoder().decode(StrapiRecipeDetailContainerModel.self, from: data)
             
-            print("레시피 \(recipe)")
+            print("레시피 \(recipe.data[0])")
             
-            return recipe.data[0].attributes
+            return Observable.just(Mutation.fetch(recipe.data[0]))
             
         } catch {
             
             print(error)
             
-            return nil
+            return Observable.just(Mutation.fetch(nil))
         }
     }
 }

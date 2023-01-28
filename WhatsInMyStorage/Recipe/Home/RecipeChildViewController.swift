@@ -64,7 +64,7 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
             .subscribe(with: self, onNext: { (owner, indexPath) in
                 
                 let detailViewController = RecipeDetailViewController()
-                detailViewController.reactor = RecipeDetailReactor()
+                
                 owner.navigationController?.pushViewController(detailViewController, animated: true)
                 
                 

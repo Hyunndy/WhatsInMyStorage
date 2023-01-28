@@ -23,16 +23,17 @@ import Foundation
  */
 
 struct StrapiRecipeDetailContainerModel: Decodable {
-    var data: [StrapiRecipeAttributeModel]
+    var data: [RecipeDetailModel]
 }
 
-struct StrapiRecipeAttributeModel: Decodable {
-    var id: Int
-    var attributes: RecipeDetailModel
-}
+//struct StrapiRecipeAttributeModel: Decodable {
+//    var id: Int
+//    var attributes: RecipeDetailModel
+//}
 
 struct RecipeDetailModel: Decodable {
     
+    var id: Int
     var name: String
     var price: Int
     //    var imageUrl: String
@@ -40,14 +41,22 @@ struct RecipeDetailModel: Decodable {
     //    var recipeStep: [String]
     
     enum CodingKeys: String, CodingKey {
-        case name
-        case price
+        case id
+        case attributes
+        
+        enum NestedCodingKeys: String, CodingKey {
+            case name
+            case price
+        }
+        
     }
     
     init(from decoder: Decoder) throws {
         let rootContainer = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try rootContainer.decode(Int.self, forKey: .id)
         
-        self.name = try rootContainer.decode(String.self, forKey: .name)
-        self.price = try rootContainer.decode(Int.self, forKey: .price)
+        let attirubuteContainer = try rootContainer.nestedContainer(keyedBy: CodingKeys.NestedCodingKeys.self, forKey: .attributes)
+        self.name = try attirubuteContainer.decode(String.self, forKey: .name)
+        self.price = try attirubuteContainer.decode(Int.self, forKey: .price)
     }
 }
