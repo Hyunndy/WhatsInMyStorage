@@ -15,4 +15,5 @@ target 'WhatsInMyStorage' do
     pod 'Then'
     pod 'lottie-ios'
     pod 'RxDataSources', '~> 5.0'
+    pod 'Alamofire'
 end

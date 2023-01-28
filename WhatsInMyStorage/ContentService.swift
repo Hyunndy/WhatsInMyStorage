@@ -1,5 +1,10 @@
 import UIKit
 
+enum APIError: Error {
+    case invaild
+    case fatal
+}
+
 class ContentService {
     static let shared = ContentService()
 
@@ -40,10 +45,7 @@ class ContentService {
         }.resume()
     }
     
-    enum APIError: Error {
-        case invaild
-        case fatal
-    }
+
     
     // async, await 전
     func fetchThumbnail(completion: @escaping (Result<UIImage, APIError>) -> Void) {

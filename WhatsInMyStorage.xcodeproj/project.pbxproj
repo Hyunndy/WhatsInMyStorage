@@ -45,6 +45,8 @@
 		02C53F2229115F8F00974031 /* UserSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F2129115F8F00974031 /* UserSettingViewController.swift */; };
 		02C53F252911613400974031 /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C53F242911613400974031 /* PropertyWrapper.swift */; };
 		02D51186293232E300F3B997 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D51185293232E300F3B997 /* PopupViewController.swift */; };
+		02E669D7298542ED008A7FD4 /* RecipeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E669D6298542ED008A7FD4 /* RecipeDetailModel.swift */; };
+		02E669DA29854408008A7FD4 /* RecipeDetailReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E669D929854408008A7FD4 /* RecipeDetailReactor.swift */; };
 		02FBF12B2948DF9500DEA53C /* Reactive+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FBF12A2948DF9500DEA53C /* Reactive+Extension.swift */; };
 		7D0D271D87E4B365041121CF /* Pods_WhatsInMyStorage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F71AA309FA31E624901F322 /* Pods_WhatsInMyStorage.framework */; };
 /* End PBXBuildFile section */
@@ -91,6 +93,8 @@
 		02C53F2129115F8F00974031 /* UserSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewController.swift; sourceTree = "<group>"; };
 		02C53F242911613400974031 /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 		02D51185293232E300F3B997 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
+		02E669D6298542ED008A7FD4 /* RecipeDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailModel.swift; sourceTree = "<group>"; };
+		02E669D929854408008A7FD4 /* RecipeDetailReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailReactor.swift; sourceTree = "<group>"; };
 		02FBF12A2948DF9500DEA53C /* Reactive+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactive+Extension.swift"; sourceTree = "<group>"; };
 		633F9053CDFD8CEE9D1D27A8 /* Pods-WhatsInMyStorage.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhatsInMyStorage.debug.xcconfig"; path = "Target Support Files/Pods-WhatsInMyStorage/Pods-WhatsInMyStorage.debug.xcconfig"; sourceTree = "<group>"; };
 		7F71AA309FA31E624901F322 /* Pods_WhatsInMyStorage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhatsInMyStorage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,6 +148,8 @@
 		025504EB29769C0500F8B90A /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				02E669D8298543E9008A7FD4 /* Reactor */,
+				02E669D5298542DF008A7FD4 /* Model */,
 				025504EC29769C3700F8B90A /* RecipeDetailViewController.swift */,
 				025504EE2978353700F8B90A /* RecipeDetailHeaderView.swift */,
 			);
@@ -295,6 +301,22 @@
 			path = Popup;
 			sourceTree = "<group>";
 		};
+		02E669D5298542DF008A7FD4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				02E669D6298542ED008A7FD4 /* RecipeDetailModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		02E669D8298543E9008A7FD4 /* Reactor */ = {
+			isa = PBXGroup;
+			children = (
+				02E669D929854408008A7FD4 /* RecipeDetailReactor.swift */,
+			);
+			path = Reactor;
+			sourceTree = "<group>";
+		};
 		2BF392032F7FBDA13F4AA734 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,6 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02E669DA29854408008A7FD4 /* RecipeDetailReactor.swift in Sources */,
 				02D51186293232E300F3B997 /* PopupViewController.swift in Sources */,
 				024B3E632923AD0500D79A04 /* ReactorKitPracticeViewController.swift in Sources */,
 				023C2D992964682A00256B6E /* CustomNavigationViewController.swift in Sources */,
@@ -449,6 +472,7 @@
 				025921EE2962F72F008F8A81 /* UIVIew+Extension.swift in Sources */,
 				02B9F79B290ED416005973AE /* AppDelegate.swift in Sources */,
 				0267DBF32917F27800F257AD /* HomeViewController.swift in Sources */,
+				02E669D7298542ED008A7FD4 /* RecipeDetailModel.swift in Sources */,
 				02612DA2291E7E6300E9C36E /* StorageInfo.swift in Sources */,
 				025504ED29769C3700F8B90A /* RecipeDetailViewController.swift in Sources */,
 				02C53F1E29115D6C00974031 /* ProtocolManager.swift in Sources */,

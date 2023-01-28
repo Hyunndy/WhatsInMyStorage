@@ -63,7 +63,11 @@ class RecipeChildViewController: UIViewController, ReactorViewControllerDelegate
         self.collectionView.rx.itemSelected
             .subscribe(with: self, onNext: { (owner, indexPath) in
                 
-                owner.navigationController?.pushViewController(RecipeDetailViewController(), animated: true)
+                let detailViewController = RecipeDetailViewController()
+                detailViewController.reactor = RecipeDetailReactor()
+                owner.navigationController?.pushViewController(detailViewController, animated: true)
+                
+                
             })
             .disposed(by: self.disposeBag)
     }

@@ -22,6 +22,7 @@ class RecipeDetailHeaderView: UICollectionReusableView {
             $0.image = UIImage(named: "kikiStore")
             $0.clipsToBounds = true
             $0.contentMode = .scaleToFill
+            $0.layer.cornerRadius = 5.0
         }
     }()
     
@@ -44,17 +45,16 @@ class RecipeDetailHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
-        
-        self.flexRootContainer.flex.direction(.column).define { (flex) in
+        self.flexRootContainer.flex.direction(.column).justifyContent(.start).define { (flex) in
             
             // Image
-            flex.addItem(self.imageView).height(200.0).width(200.0)
+            flex.addItem(self.imageView).height(250.0).marginHorizontal(5%)
             
             // Info row
-            flex.addItem().direction(.row).padding(6.0).grow(1).define { (flex) in
+            flex.addItem().direction(.column).justifyContent(.spaceBetween).grow(1).define { (flex) in
                 flex.addItem(self.nameLabel)
-                flex.addItem(self.priceLabel)
-            }
+                flex.addItem(self.priceLabel).marginTop(5.0)
+            }.marginTop(10.0).marginHorizontal(5%)
         }
         
         self.addSubview(self.flexRootContainer)

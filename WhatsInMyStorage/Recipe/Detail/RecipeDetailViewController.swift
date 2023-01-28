@@ -12,21 +12,25 @@
 import UIKit
 import FlexLayout
 import PinLayout
+import ReactorKit
+import RxSwift
 
 class PracticeCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "PracticeCollectionViewCell"
     
     private let rootFlexContainer = UIView()
-    let titleLabel = UILabel()
+    lazy var titleLabel: UILabel = {
+        return UILabel().then {
+            $0.font = .boldSystemFont(ofSize: 20.0)
+            $0.textColor = .black
+        }
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
         self.contentView.addSubview(self.titleLabel)
-        self.titleLabel.font = .boldSystemFont(ofSize: 20.0)
-        self.titleLabel.textColor = .black
-        self.backgroundColor = .yellow
     }
     
     override func layoutSubviews() {
@@ -56,16 +60,18 @@ class PracticeCollectionViewCell2: UICollectionViewCell {
     static let identifier = "PracticeCollectionViewCell2"
     
     private let rootFlexContainer = UIView()
-    let titleLabel = UILabel()
+    lazy var titleLabel: UILabel = {
+        return UILabel().then {
+            $0.font = .boldSystemFont(ofSize: 20.0)
+            $0.textColor = .black
+            $0.numberOfLines = 0
+        }
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
         self.contentView.addSubview(self.titleLabel)
-        self.titleLabel.font = .boldSystemFont(ofSize: 20.0)
-        self.titleLabel.textColor = .black
-        self.titleLabel.numberOfLines = 0
-        self.backgroundColor = .yellow
     }
     
     override func layoutSubviews() {
@@ -90,9 +96,32 @@ class PracticeCollectionViewCell2: UICollectionViewCell {
     }
 }
 
-
-
-class RecipeDetailViewController: CustomNavigationViewController, UISettingDelegate {
+class RecipeDetailViewController: UIViewController, UISettingDelegate, ReactorViewControllerDelegate {
+    
+    var disposeBag = DisposeBag()
+    
+    typealias Reactor = RecipeDetailReactor
+    
+    func bind(reactor: RecipeDetailReactor) {
+        self.bindAction(reactor: reactor)
+        self.bindState(reactor: reactor)
+    }
+    
+    func bindAction(reactor: RecipeDetailReactor) {
+        
+        self.rx.viewDidLoad
+            .map { Reactor.Action.fetch }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+    }
+    
+    func bindState(reactor: RecipeDetailReactor) {
+        reactor.state
+            .map { $0.recipeDetail }
+            .subscribe {
+                print("씨발 \($0)")
+            }.disposed(by: self.disposeBag)
+    }
     
     enum Section: Int {
         case ingredient = 0
@@ -134,12 +163,21 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
     
     var dataSource: DataSource?
     
+    lazy var confirmButton: UIButton = {
+        return UIButton().then {
+            $0.backgroundColor = UIColor.wms.green
+            $0.setTitle("삭제하기", for: .normal)
+            $0.layer.cornerRadius = 5.0
+            $0.clipsToBounds = true
+        }
+    }()
+    
     private func getCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         
         let layout =  UICollectionViewCompositionalLayout(sectionProvider: { (sectionIdx, enviroment) in
             
             // 푸터
-            let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
+            let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(10.0))
             let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
             sectionFooter.contentInsets = .init(top: 5.0, leading: 0.0, bottom: 0.0, trailing: 0.0)
             
@@ -159,6 +197,7 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
                 
                 // section
                 let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = .init(top: 10.0, leading: 5.0, bottom: 0.0, trailing: 0.0)
                 section.interGroupSpacing = 6.0
                 section.orthogonalScrollingBehavior = .continuous
                 section.boundarySupplementaryItems = [sectionHeader, sectionFooter]
@@ -184,7 +223,8 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
                 // group
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(40.0))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
+                group.contentInsets = .init(top: 0.0, leading: 5.0, bottom: 0.0, trailing: 0.0)
+                
                 // section
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 6.0
@@ -268,6 +308,8 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
         }
         
         self.collectionView.collectionViewLayout = self.getCollectionViewLayout()
+        
+        self.view.addSubview(self.confirmButton)
     }
     
     override func viewDidLoad() {
@@ -279,6 +321,8 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
         snapshot.appendItems(recipeStepData, toSection: .step)
         snapshot.appendItems(OtherRecipeArray, toSection: .otherRecipe)
         self.dataSource?.apply(snapshot, animatingDifferences: true)
+        
+        print("viewDIdlLoad 불림")
     }
     
     override func viewDidLayoutSubviews() {
@@ -286,6 +330,8 @@ class RecipeDetailViewController: CustomNavigationViewController, UISettingDeleg
         
         //
 //        self.headerView.pin.below(of: self.navigationBarView).horizontally().width(100%).sizeToFit(.width)
-        self.collectionView.pin.below(of:self.navigationBarView).horizontally().bottom(10.0)
+        self.collectionView.pin.top().horizontally().bottom(10.0)
+        
+//        self.confirmButton.pin.below(of: self.collectionView).horizontally(10.0).height(56.0).bottom()
     }
 }
